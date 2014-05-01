@@ -1,0 +1,34 @@
+property            color              value_purchase    value_house   rent_base    rent_house1  rent house2 rent_house3  rent house4 house5=hotel 
+
+Mediterranean Ave.  Purple      	60		50		  2		10		30	90          160          250
+Baltic Ave.         Purple		60              50                4             20              60      180         320          450
+Oriental Ave.       Light-Green		100
+Vermont Ave.        Light-Green
+Connecticut Ave.    Light-Green
+St. Charles Place   Violet
+States Ave.         Violet
+Virginia Ave.       Violet
+St. James Place     Orange
+Tennessee Ave.      Orange
+New York Ave.       Orange
+Kentucky Ave.       Red
+Indiana Ave.        Red
+Illinois Ave.       Red
+Atlantic Ave.       Yellow
+Ventnor Ave.        Yellow
+Marvin Gardens      Yellow
+Pacific Ave.        Dark-Green
+North Carolina Ave. Dark-Green
+Pennsylvania Ave.   Dark-Green
+Park Place          Dark-Blue
+Boardwalk           Dark-Blue
+
+
+
+
+
+
+
+
+
+     
