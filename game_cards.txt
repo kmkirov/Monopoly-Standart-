@@ -1,27 +1,27 @@
 property            color              value_purchase    value_house   rent_base    rent_house1  rent house2 rent_house3  rent house4 house5=hotel 
 
 Mediterranean Ave.  Purple      	60		50		  2		10		30	90          160          250
-Baltic Ave.         Purple		60              50                4             20              60      180         320          450
-Oriental Ave.       Light-Green		100
-Vermont Ave.        Light-Green
-Connecticut Ave.    Light-Green
-St. Charles Place   Violet
-States Ave.         Violet
-Virginia Ave.       Violet
-St. James Place     Orange
-Tennessee Ave.      Orange
-New York Ave.       Orange
-Kentucky Ave.       Red
-Indiana Ave.        Red
-Illinois Ave.       Red
-Atlantic Ave.       Yellow
-Ventnor Ave.        Yellow
-Marvin Gardens      Yellow
-Pacific Ave.        Dark-Green
-North Carolina Ave. Dark-Green
-Pennsylvania Ave.   Dark-Green
-Park Place          Dark-Blue
-Boardwalk           Dark-Blue
+Baltic Ave.         Purple		60 	30 	4 	20 	60 	180 	320 	450
+Oriental Ave.       Light-Green	100 	50 	6 	30 	90 	270 	400 	550
+Vermont Ave.        Light-Green    100 	50 	6 	30 	90 	270 	400 	550  
+Connecticut Ave.    Light-Green    120 	60 	8 	40 	100 	300 	450 	600
+St. Charles Place   Violet 140 	70 	10 	50 	150 	450 	625 	750
+States Ave.         Violet 140 	70 	10 	50 	150 	450 	625 	750
+Virginia Ave.       Violet  160 	80 	12 	60 	180 	500 	700 	900
+St. James Place     Orange 180 	90 	14 	70 	200 	550 	750 	950
+Tennessee Ave.      Orange 180 	90 	14 	70 	200 	550 	750 	950
+New York Ave.       Orange 200 	100 	16 	80 	220 	600 	800 	1000
+Kentucky Ave.       Red   220 	110 	18 	90 	250 	700 	875 	1050
+Indiana Ave.        Red   220 	110 	18 	90 	250 	700 	875 	1050
+Illinois Ave.       Red   240 	120 	20 	100 	300 	750 	925 	1100
+Atlantic Ave.       Yellow 260 	130 	22 	110 	330 	800 	975 	1150
+Ventnor Ave.        Yellow 260 	130 	22 	110 	330 	800 	975 	1150
+Marvin Gardens      Yellow 280 	140 	22 	120 	360 	850 	1025 	1200
+Pacific Ave.        Dark-Green 300 	150 	26 	130 	390 	900 	1100 	1275
+North Carolina Ave. Dark-Green 300 	150 	26 	130 	390 	900 	1100 	1275
+Pennsylvania Ave.   Dark-Green 320 	160 	28 	150 	450 	1000 	1200 	1400
+Park Place          Dark-Blue 350 	175 	35 	175 	500 	1100 	1300 	1500
+Boardwalk           Dark-Blue 400 	200 	50 	200 	600 	1400 	1700 	2000
 
 
 
