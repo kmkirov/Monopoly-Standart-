@@ -53,7 +53,7 @@ class Game:
         player_list[pl_index].budget = player_list[pl_index].budget - building_price
         player_list[pl_index].self.list_of_items.append(building_name)##slagam imeto na sgradata :)
     
-list_of_groups=[['baltimor', 'drug']]
+
     
     def can_build(self, players_items_, wanted_to_build):
 
@@ -62,11 +62,6 @@ list_of_groups=[['baltimor', 'drug']]
         if part not in players_items_:
             return False
     return True
-
-
-    
-
-
 
 
 
