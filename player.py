@@ -22,7 +22,10 @@ class Player:
         return self.player_name
 
     
+    def get_items():
+        return self.list_of_items
 
+        
     def can_pay(self,price):
         return price <= self.budget
 

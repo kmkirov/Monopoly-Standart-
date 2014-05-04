@@ -1,3 +1,9 @@
+
+BUILDING_NAMEORDER = [building.get_building_name() for building in list_of_buildings]
+PLAYER_NAMEORDER = [player.name() for player in player_list]
+
+
+
 #Community Chest list:
 
 def Community(self, player_index, index_community):
@@ -83,7 +89,7 @@ go_option='Advance'
 each=r'each'
 
 
-def Chance(self,index_chance):
+def Chance(self, player_index, index_community):
     card_chans = CHANCE[index_chance]   
     if bool(re.search(spaces, card_chest[0])):
         new_pos = move_player_from_to(player_list[player_index].possition,\
@@ -121,7 +127,7 @@ CHANCE = [ ['Advance to Go (collect $200)', 200],
           ['Your building loan matures – collect $150', 150],
           ['You have won a crossword competition - collect $100 ', 100]  ]
 
-
+DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3, 'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
 list_of buildings = [
     deck_building('GO', 'FREE', 0, 0, 0),
     deck_building('Mediterranean Ave.',  'Purple', 60,
@@ -129,7 +135,7 @@ list_of buildings = [
     deck_building('Comunity Chest', 'CC', 0, 0)
     deck_building('Baltic Ave.',         'Purple', 60,
                   50, 4, 20,     60,    180,  320,   450),
-    deck_building('Income Tax','TAX', 200)
+    deck_building('Income Tax','TAX', 0,0,200)
     deck_building('READING RAILROAD', 'STATION', 200, 25)
     deck_building('Oriental Ave.',       'Light-Green', 100,
                   50, 6, 30,     90,   270,  400,   550),
@@ -181,7 +187,7 @@ list_of buildings = [
     deck_building('CHANCE', 'C', 0, 0)
     deck_building('Park Place', 'Dark-Blue',      350,
                   200, 35, 175,     500,  1100,   1300, 1500),
-    deck_building('Luxyry Tax','TAX' ,75)
+    deck_building('Luxyry Tax','TAX',0,0 ,75)
     deck_building('Boardwalk', 'Dark-Blue',       400,
                   200, 50, 200,     600,  1400,    1700, 2000)
 ]

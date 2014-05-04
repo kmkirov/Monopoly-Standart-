@@ -22,6 +22,12 @@ class playing_deck:
         index_player = players_.index(player_name)
         player_list.budget = player_list.budget + money
 
+    def move_pos_pos(old_position, new_position,player_name):
+        deck_buldings_ordered[old_position].players_on_building.remove(player_name)
+        deck_buldings_ordered[new_position].players_on_building.append(player_name)
+
+
+
 
     #remove from old pos and move to the new possition + return the index
     def move_player_from_to(self,from_pos,step,player_name):

@@ -132,8 +132,75 @@ class Game:
         else:
             return 'B'
 
-    def player_game(self, command, player):
-        if command
+    def player_action_after_step(self, command, player_index, building_index):
+        building_name = list_of buildings[building_index].get_building_name()
+        if command == 'F' or command == 'O':
+            return
+        elif command == 'T':
+            player_list[player_index].add_money(-list_of buildings[building_index].buildig_fee_globa)
+        elif command == 'U':
+            a = random.randrange(1,7)
+            b = random.randrange(1,7)
+            if  index_of_owner('Electronic Company') == index_of_owner('Water Work'):
+                player_list[player_index].add_money(-((a+b)*10))
+            else :
+                player_list[player_index].add_money(-((a+b)*4))
+        elif command == 'S':
+            STATION_FEE =[25,50,100,200]
+            happy_player_index = index_of_owner(self,building_name)
+            owned_types = player_type_of_buildings( happy_player_index)
+            player_list[happy_player_index].add_money(STATION_FEE[owned_types.count('STATION')-1])
+            player_list[player_index].add_money(-STATION_FEE[owned_types.count('STATION')-1])
+
+        elif command == 'CC':
+            Community(self, player_index, self.comunity_chest_index)
+        elif command == 'C':
+            Chance(self, player_index, self.chance_index)
+
+        elif command == 'J':
+            move_pos_pos(building_index, 10 ,player_list[player_index].name())
+        else: 
+            if   list_of buildings[building_index].can_buy():
+                print ('auction or buy')
+                answer = input()
+            else:
+                player_list[player_index].add_money(-list_of buildings[building_index].take_fee())
+                happy_player_index = index_of_owner(self,building_name)
+                owned_types = player_type_of_buildings( happy_player_index)
+                player_list[happy_player_index].add_money(list_of buildings[building_index].take_fee())
+
+
+
+
+
+
+    def can_buy(self, buildin_index):
+
+
+    def player_type_of_buildings(self, player_index):
+        owned_buildings = player_list[player_index].get_items()
+        owned_types = []
+        for item in owned_buildings:
+            index = BUILDING_NAMEORDER.index(item)
+            owned_types.append(list_of_buildings[index].color_street)
+        return owned_types
+
+#DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3, 'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
+    def can_build_house(self, selected_house_name):
+        index = BUILDING_NAMEORDER.index(selected_house_name)
+        selected_color = list_of_buildings[index].color_street
+        owner = index_of_owner(selected_house_name):
+        owner_buildings = player_type_of_buildings( owner)
+        if selected_color in ['Dark-Blue','Purple']:
+            return owner_buildings.count(selected_color) == 2
+        else:
+            return owner_buildings.count(selected_color) == 3
+
+
+    def index_of_owner(self,building_name):
+        building_index = BUILDING_NAMEORDER.index(building_name)
+        return PLAYER_NAMEORDER.index(list_of_buildings[building_index].owner)
+
 
     def main_loop(self):
         import random
@@ -143,7 +210,15 @@ class Game:
             b = random.randrange(1,7)
             new_pos = move_player_from_to(player_list[pindex].get_position(),a+b ,player_list[pindex].name())
             player_list[pindex].new_position(new_pos)
-            command = check_position(new_pos)
+            if list_of_buildings[new_pos].owner != player_list[pindex].name():
+                command = check_position(new_pos)
+                player_action_after_step( command, pindex, new_pos)
+            #veche e premesten i polugloben
+                while True:
+                print('do you want to mourtage,unmourtage,sell,build?  or No')
+                answer = input()
+                if answer == No:
+                    break
 
 
 

@@ -1,7 +1,7 @@
 class deck_building:
 
 
-    def __init__(self, buildig_name,                 
+    def __init__(self, building_name,                 
                         color_street='FREE',
                         building_price=0,
                         perhouse_price=0,                 
@@ -13,11 +13,11 @@ class deck_building:
                         fee_with_five_house=0,
                         players_on_building=[],
                         is_mourtaged=False,
-                        owner='Bank',
+                        owner='BANK',
                         picture=None
                  ):
 
-        self.buildig_name = buildig_name
+        self.building_name = building_name
         self.color_street = color_street  # neighborhood po dobre vunshen
         self.building_price = building_price
         self.perhouse_price = perhouse_price        
@@ -61,7 +61,8 @@ class deck_building:
             return 0
         else:
             return self.house_count
-
+    def building_name():
+        return self.building_name
 
     def kak_da_namerq_liniq_ot_ulici(self):
         pass
@@ -74,6 +75,9 @@ class deck_building:
     def take_fee(self):
         return self.with_house_fee[self.house_count]
 
+
+    def can_buy(self):
+        return self.owner == 'BANK'
 
     def __str__(self):
         print(
