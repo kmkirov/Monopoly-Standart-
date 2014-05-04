@@ -2,7 +2,7 @@ class deck_building:
 
 
     def __init__(self, buildig_name,                 
-                        color_street='Free',
+                        color_street='FREE',
                         building_price=0,
                         perhouse_price=0,                 
                         buildig_fee_globa=0,
@@ -54,6 +54,13 @@ class deck_building:
 
     def mourtage_price(self):
         return self.building_price / 2
+
+
+    def count_houses(self):
+        if self.house_count == 5:
+            return 0
+        else:
+            return self.house_count
 
 
     def kak_da_namerq_liniq_ot_ulici(self):

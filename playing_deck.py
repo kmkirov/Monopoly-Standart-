@@ -10,18 +10,18 @@ class playing_deck:
         """
 
 
-    def __init__(self,player_list,deck):
-        player_list = [] #moje da e dict
-        deck_buldings_ordered ....
+    def __init__(self):
+        pass
     
 
-    def roll_dice(self, player_name):
-        a = random.randrange(1,7)
-        print(player_name,' get ',a)
-        b = random.randrange(1,7)
-        print('and ',b)
-        #logging
-        return a + b
+
+
+
+    def add_money(self,player_name,money):
+        players_ = [player.name() for player in player_list]
+        index_player = players_.index(player_name)
+        player_list.budget = player_list.budget + money
+
 
     #remove from old pos and move to the new possition + return the index
     def move_player_from_to(self,from_pos,step,player_name):
