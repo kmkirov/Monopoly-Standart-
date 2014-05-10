@@ -1,10 +1,34 @@
+import random
+import re
+
+from global_variables import CHANCE, COMMUNITY_CHEST, LIST_OF_BUILDINGS
+
+
+
 class Game:
-    bancrupt_players = []
-    chance_index = 0
-    comunity_chest_index = 0
-    def __init__(self, deck,players):
-        self.deck
-        pass
+    
+    
+    def __init__(self):
+        self._bancrupt_players = []
+        self.player_list = []
+        self.PLAYER_NAMEORDER = []
+        self.BUILDING_NAMEORDER = [building.get_building_name() for building in list_of_buildings]
+        #self.playerNAMES 
+        
+        self._COMMUNITY_CHEST = COMMUNITY_CHEST #globalno
+        self._comunity_chest_index = 0
+         
+
+        self._CHANCE = CHANCE
+        self._chance_index = 0
+         
+        
+    def shuffler(self):
+        for i in range(random.randint(2,10)):
+            random.shuffle(self._COMMUNITY_CHEST)
+        for i in range(random.randint(2,10)):
+            random.shuffle(self._CHANCE)
+
     def register_player(self):
         """ add new players at the beginning of the game (work with typing Yes,No to continue)"""
         register='Yes'
@@ -12,7 +36,7 @@ class Game:
             register='No'
             print('Enter Player name: ')
             name=input()
-            if self.__valid_name(name):
+            if self._valid_name(name):
             #if not macht \w* again
                 player = Player(name)
                 player_list.append(player)
@@ -23,17 +47,24 @@ class Game:
             register = input() #true false
 
 
-    def __valid_name(self,name):
-        """ Check the size and content of username"""
-        import re
+    def _valid_name(self,name):
+       
+        
         name_regex = r'(?P<username>^[a-zA-Z]\w{5,10}$)'
         if bool(re.match(name_regex, name)):
-            names = [ i.player_name for i in player_list ]
+            names = [ i.player_name for i in self.player_list ]
             if name not in names :
                 return True
         return False   
 
-
+    def roll_dice(self): #pochti bezpolezna
+        
+        a = random.randrange(1,7)
+        
+        b = random.randrange(1,7)
+        
+        #logging
+        return a + b
 
     def auction(self, building_name):
         #players_acuction=[ player for player in player_list if player.is_playing()]
@@ -102,14 +133,7 @@ class Game:
               return False
         return True
 
-    def roll_dice(self, player_name): #pochti bezpolezna
-        
-        a = random.randrange(1,7)
-        print(player_name,' get ',a)
-        b = random.randrange(1,7)
-        print('and ',b)
-        #logging
-        return a + b
+    
 
 
     def check_position(self, index, player_name):
@@ -219,6 +243,26 @@ class Game:
                 answer = input()
                 if answer == No:
                     break
+    def bancrupt(self, winer,loser):
+        w = player_list[ player_list.index(winner)]
+        l = player_list[ player_list.index(winner)]
+        a = deck_buldings_ordered
+        for building in l.list_of_items:
+            if a[a.index(building)].house_count>0:
+                destroy_house(self,a.index(building),l.name,a[a.index(building)].house_count )
+        w.budget = w.buget + l.budget
+        w.list_of_items.append(l.list_of_items)
 
 
-
+lucky_regex = {'Get_money':r'collect',
+               'Pay_money':r'Collect',
+               'Jail_free':r'Get out of jail free',
+               'Jail_in ':r'Go to jail',
+               'Pay': r'Pay',
+               'Hotel_pay':r'hotel', 
+               'Go_option':'Advance',
+               'Each':r'each',
+               'utility' : r'utility',
+               'pay_each' :r'pay each player',
+               'Spaces' : r'back 3 spaces'
+              }

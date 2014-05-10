@@ -1,13 +1,6 @@
 import random
 class playing_deck:
-    """ 
-    def roll_dice(self, player_name):
-        return result from 2 rolled dices and print smth
 
-
-
-
-        """
 
 
     def __init__(self):
@@ -93,17 +86,17 @@ class playing_deck:
         deck_buldings_ordered = a
         return money_get
     
-    def bancrupt(self, winer,loser):
-        w = player_list[ player_list.index(winner)]
-        l = player_list[ player_list.index(winner)]
-        a = deck_buldings_ordered
-        for building in l.list_of_items:
-            if a[a.index(building)].house_count>0:
-                destroy_house(self,a.index(building),l.name,a[a.index(building)].house_count )
-        w.budget = w.buget + l.budget
-        w.list_of_items.append(l.list_of_items)
+
     
-    def end_turn(self):
-        pass
-    def special_card(self):
-        pass
+
+    
+
+
+    """ 
+    def roll_dice(self, player_name):
+        return result from 2 rolled dices and print smth
+
+
+
+
+        """

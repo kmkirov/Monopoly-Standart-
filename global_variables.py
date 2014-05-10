@@ -1,11 +1,22 @@
 
 BUILDING_NAMEORDER = [building.get_building_name() for building in list_of_buildings]
-PLAYER_NAMEORDER = [player.name() for player in player_list]
+
 
 
 
 #Community Chest list:
-
+lucky_regex = {'Get_money':r'collect',
+               'Pay_money':r'Collect',
+               'Jail_free':r'Get out of jail free',
+               'Jail_in ':r'Go to jail',
+               'Pay': r'Pay',
+               'Hotel_pay':r'hotel', 
+               'Go_option':'Advance',
+               'Each':r'each',
+               'utility' : r'utility',
+               'pay_each' :r'pay each player',
+               'Spaces' : r'back 3 spaces'
+              }
 def Community(self, player_index, index_community):
 
     """
@@ -19,7 +30,7 @@ def Community(self, player_index, index_community):
                  8)error
     """
     card_chest = COMMUNITY_CHEST[index_community]
-    if bool(re.search(go_option, card_chest[0])) and bool(re.search(just_pay, card_chest[0])):
+    if bool(re.search(lucky_regex['Go_option'], card_chest[0])) and bool(re.search(just_pay, card_chest[0])):
         new_pos = move_player_from_to(player_list[player_index].possition,\
           len(list_of buildings) - player_list[player_index].possition + 1,player_list[player_index].name())
         player_list[player_index].possition = new_pos
@@ -57,7 +68,7 @@ def Community(self, player_index, index_community):
       print('test again !! fun Community ')
 
 
-COMMUNITY_CHEST = [ ['Advance to Go (collect $200)', 200, 0],
+COMMUNITY_CHEST = [['Advance to Go (collect $200)', 200, 0],
                    ['Bank error in your favor – collect $75', 75],
                    ['Doctor\'s fees – Pay $50', 50],
                    ['Get out of jail free – this card may be kept until needed, or sold', 1],
@@ -67,26 +78,18 @@ COMMUNITY_CHEST = [ ['Advance to Go (collect $200)', 200, 0],
                    ['Income Tax refund – collect $20', 20],
                    ['Life Insurance Matures – collect $100', 100],
                    ['Pay Hospital Fees of $100', 100],
-                   ['Pay School Fees of $50': 50] ,
+                   ['Pay School Fees of $50', 50] ,
                    ['Receive $25 Consultancy Fee (collect)', 25],
                    ['You are assessed for street repairs – $40 per house, $115 per hotel', 40,115],
                    ['You have won second prize in a beauty contest– collect $10', 10],
                    ['You inherit $100 (collect )', 100],
                    ['From sale of stock you get $50 (collect)', 50],
                    ['Holiday Fund matures - Receive $100 (collect)', 100]
-                   }
+                  ]
 
 
 
-        
-just_pay=r'collect'
-everybody_pay=r'Collect'
-jail_free=r'Get out of jail free'
-jail_in ='Go to jail'
-pay = r'Pay'
-hotel_pay=r'hotel' 
-go_option='Advance'
-each=r'each'
+
 
 
 def Chance(self, player_index, index_community):
@@ -101,10 +104,7 @@ def Chance(self, player_index, index_community):
         
 
 
-#Chance list:
-utility = r'utility'
-pay_each =r'pay each player'
-spaces = r'back 3 spaces'
+
 
 CHANCE = [ ['Advance to Go (collect $200)', 200],
           ['Advance to Illinois Ave.', index[ave]],
@@ -128,7 +128,7 @@ CHANCE = [ ['Advance to Go (collect $200)', 200],
           ['You have won a crossword competition - collect $100 ', 100]  ]
 
 DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3, 'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
-list_of buildings = [
+LIST_OF_BUILDINGS = [
     deck_building('GO', 'FREE', 0, 0, 0),
     deck_building('Mediterranean Ave.',  'Purple', 60,
                   50, 2, 10,     30,     90,  160,   250),
@@ -209,54 +209,5 @@ can_build_groups = [['Mediterranean Ave.', 'Baltic Ave.'],
 
 
 
-
-
-
-"""
-
-
-deck_building('B. & O. RAILROAD', 'station', 200, 25)
-deck_building('SHORT LINE R.R.',  'station', 200, 25)
-deck_building('READING RAILROAD', 'station', 200, 25)
-deck_building('PENSYLVANIA R.R.', 'station', 200, 25)
-deck_building('Water Work', 'utility',150,row)
-deck_building('Electronic Company', 'utility',150,row)
-
-deck_building('Free Parking', 'FREE',0,0,0)
-deck_building('GO', 'FREE',0,0,0)
-deck_building('CHANCE', 'FREE',0,0)
-deck_building('Comunity Chest', 'FREE',0,0)
-deck_building('JAIL', 'FREE',0,0)
-deck_building('JUST VISITING', 'FREE',0,0)
-deck_building('Income Tax',200)
-deck_building('Luxyry Tax',75)
-
-
-        property            color     value_purchase    value_house   rent_base    rent_house1  rent house2 rent_house3  rent house4 house5=hotel 
-
-        Mediterranean Ave.  Purple          60      50      2   10      30      90      160     250
-        Baltic Ave.         Purple          60      50      4   20      60      180     320     450
-        Oriental Ave.       Light-Green     100     50      6   30      90      270     400     550
-        Vermont Ave.        Light-Green     100     50      6   30      90      270     400     550  
-        Connecticut Ave.    Light-Green     120     50      8   40      100     300     450     600
-        St. Charles Place   Violet          140     100      10  50      150     450     625     750
-        States Ave.         Violet          140     100      10  50      150     450     625     750
-        Virginia Ave.       Violet          160     100      12  60      180     500     700     900
-        St. James Place     Orange          180     100      14  70      200     550     750     950
-        Tennessee Ave.      Orange          180     100      14  70      200     550     750     950
-        New York Ave.       Orange          200     100     16  80      220     600     800     1000
-        Kentucky Ave.       Red             220     150     18  90      250     700     875     1050
-        Indiana Ave.        Red             220     150     18  90      250     700     875     1050
-        Illinois Ave.       Red             240     150     20  100     300     750     925     1100
-        Atlantic Ave.       Yellow          260     150     22  110     330     800     975     1150
-        Ventnor Ave.        Yellow          260     150     22  110     330     800     975     1150
-        Marvin Gardens      Yellow          280     150     22  120     360     850     1025    1200
-        Pacific Ave.        Dark-Green      300     200     26  130     390     900     1100    1275
-        North Carolina Ave. Dark-Green      300     200     26  130     390     900     1100    1275
-        Pennsylvania Ave.   Dark-Green      320     200     28  150     450     1000    1200    1400
-        Park Place          Dark-Blue       350     200     35  175     500     1100    1300    1500
-        Boardwalk           Dark-Blue       400     200     50  200     600     1400    1700    2000
-
-"""
 
 

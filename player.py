@@ -17,7 +17,9 @@ class Player:
             'in jail', self.in_jail, ' cards: ', self.list_cards, '\n',
             'position is', self.position)
 
-
+    def player_name():
+        return self.player_name
+        
     def __str__(self):
         return self.player_name
 
