@@ -252,7 +252,11 @@ class Game:
                 destroy_house(self,a.index(building),l.name,a[a.index(building)].house_count )
         w.budget = w.buget + l.budget
         w.list_of_items.append(l.list_of_items)
-
+# ne znam zashto e tuk tova
+    def add_money(self,player_name,money):
+        players_ = [player.name() for player in player_list]
+        index_player = players_.index(player_name)
+        player_list.budget = player_list.budget + money
 
 lucky_regex = {'Get_money':r'collect',
                'Pay_money':r'Collect',
@@ -266,3 +270,16 @@ lucky_regex = {'Get_money':r'collect',
                'pay_each' :r'pay each player',
                'Spaces' : r'back 3 spaces'
               }
+
+
+        def trade(self,buyer,seller,money_for_b, money_for_s,b_buildig,s_buliding):
+        buy_person =  player_list[ player_list.index(buyer)]
+        sell_person =  player_list[ player_list.index(seller)]
+        
+        buy_person.budget = buy_person.budget + money_for_b
+        sell_person.budget = sell_person.budget + money_for_s
+        
+        buy_person.list_of_items.append(b_buildig) 
+        sell_person.remove(s_buliding)
+        player_list[ player_list.index(buyer)] = buy_person
+        player_list[ player_list.index(seller)] = sell_person 

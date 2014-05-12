@@ -1,13 +1,14 @@
+import re
 class Player:
 
     def __init__(self, player_name, picture=None):
         self.player_name = player_name
         self.budget = 1500
         self.houses = 0
-        self.list_of_items = []
+        self.list_of_items = list()
         self.picture = picture
         self.in_jail = False
-        self.list_cards = []
+        self.list_cards = list()
         self.position = 0
         self.is_bancrupt = False
 
@@ -17,40 +18,49 @@ class Player:
             'in jail', self.in_jail, ' cards: ', self.list_cards, '\n',
             'position is', self.position)
 
-    def player_name():
+    def playername(self):
+        return self.player_name
+    
+    def name(self):
         return self.player_name
         
     def __str__(self):
         return self.player_name
 
     
-    def get_items():
+    def get_items(self):
         return self.list_of_items
-
+    
+    def add_item(self,item_name):
+        if item_name not in  self.list_of_items:
+            self.list_of_items.append(item_name)
+            
+    def remove_item(self,item_name):
+        if item_name  in  self.list_of_items:
+            self.list_of_items.remove(item_name)
+            return True
+        return False
         
     def can_pay(self,price):
-        return price <= self.budget
+        return price <= self.budget 
 
-
-
-    def get_position(sefl):
+    def get_position(self):
         return self.position
 
-    def new_position(self,prosition):
-        self.position=position   
-
-
-    def name(self):
-        return self.player_name
+    def new_position(self,position):
+        self.position=position       
 
     def is_playing(self):
         return self.is_bancrupt == False
+    
+    def new_status(self, status):
+        self.is_bancrupt=status
 
     def has_item(self, building_name):
-        return building_name in list_of_items
-
+        return building_name in  self.list_of_items
+# ne mislq che mu e tuk mqstoto
     def count_type(self, color):
-        import re
+        
         counter = 0
         for i in list_of_items:
             if re.search(color, i):

@@ -1,102 +1,83 @@
 import random
+
+from  building import deck_building
+from global_variables import LIST_OF_BUILDINGS
+BANK = 'BANK'
+CONST_HOUSE = 5
 class playing_deck:
-
-
-
-    def __init__(self):
-        pass
+    def __init__(self, deck = LIST_OF_BUILDINGS):
+        self._deck = list(deck)
     
-
-
-
-
-    def add_money(self,player_name,money):
-        players_ = [player.name() for player in player_list]
-        index_player = players_.index(player_name)
-        player_list.budget = player_list.budget + money
-
-    def move_pos_pos(old_position, new_position,player_name):
-        deck_buldings_ordered[old_position].players_on_building.remove(player_name)
-        deck_buldings_ordered[new_position].players_on_building.append(player_name)
-
-
-
-
-    #remove from old pos and move to the new possition + return the index
-    def move_player_from_to(self,from_pos,step,player_name):
-        old_position = deck_buldings_ordered[from]
-        old_position.players_on_building.remove(player_name)  #list.remove
-        new_index = ( from_pos + step ) % len(deck_buldings_ordered)#da ne prevyrta
-        new_position=deck_buldings_ordered[new_index]
-        new.position.players_on_building.append(player_name)
-        return new_index
-
-
-    def rent(self, player_name, place_index): #samo ako moje da se vzeme
-        position=deck_buldings_ordered[place_index]
-
-        a = player_list[ player_list.index(player_name)].budget 
-        if position.buildig_name not in a.list_of_items[]:
-            player_list[ player_list.index(player_name)].budget = a - position.teke_fee()
-
-
-
-    def build_house(self,index,player_name, house_count=1 ):
-        a=deck_buldings_ordered[index].house_count
-        #if a == 5: raise 
-        deck_buldings_ordered[index].house_count=a + house_count
-        player_list[ player_list.index(player_name)].budget = player_list[ player_list.index(player_name)].budget -
-                house_count * deck_buldings_ordered[index].perhouse_price
-
-    
-
-     def destroy_house(self,index,player_name, house_count=1 ):
-        a=deck_buldings_ordered[index].house_count
-        deck_buldings_ordered[index].house_count=a - house_count
-        player_list[ player_list.index(player_name)].budget = player_list[ player_list.index(player_name)].budget +
-                0.5 * house_count * deck_buldings_ordered[index].perhouse_price
-
-
-    def trade(self,buyer,seller,money_for_b, money_for_s,b_buildig,s_buliding):
-        buy_person =  player_list[ player_list.index(buyer)]
-        sell_person =  player_list[ player_list.index(seller)]
+    def set_player_on_pos(self,position,player_name):
+        self._deck[position].add_player(player_name)
         
-        buy_person.budget = buy_person.budget + money_for_b
-        sell_person.budget = sell_person.budget + money_for_s
+    def get_player(self,position):
+        return self._deck[position].all_players() 
+
+    def set_player_on_pos(self,position,player_name):
+        self._deck[position].add_player(player_name)   
+    
+    def move_player(self,old_position, new_position,player_name):
+        self._deck[old_position].delete_player(player_name)
+        self._deck[new_position].add_player(player_name)
+
+    def buy_place(self, position , player_name): # ako ima kushti ne moje da se prodade
+        if self._deck[position].can_buy:
+            self._deck[position].buy_building(player_name)
+            return self._deck[position].get_price()
+        else :
+            self._deck[position].buy_building(player_name)
+
+    def get_rent(self, position, player_name): 
+        if self.get_owner(position) in [BANK, player_name]:
+            return 0
+        else:
+            return self._deck[position].take_fee()
+
+    def price_for_house(self, position):
+        return self._deck[position].house_cost()
+    
+    def get_player(self,position):
+        return self._deck[position].all_players()
+
+    def house_count(self,position):
+        return self._deck[position].count_houses()
+
+    def has_hotel(self,position):
+        return self._deck[position].has_hotel()
         
-        buy_person.list_of_items.append(b_buildig) 
-        sell_person.remove(s_buliding)
-        player_list[ player_list.index(buyer)] = buy_person
-        player_list[ player_list.index(seller)] = sell_person 
+    def build_house(self,position,player_name):        
+        if self._deck[position].can_build(player_name)  :
+            if self._deck[position].build_house() :
+                return self.price_for_house(position)
+            else:
+                return 0
+            return 0
 
-    def mourtage(self, building, player):
-        a = deck_buldings_ordered
-        a[a.index(building)].is_mourtaged = True
-        money_get = a[a.index(building)].mourtage_price()
-        player_list[ player_list.index(player)].budget =  player_list[ player_list.index(player)].budget+money_get
-        deck_buldings_ordered = a
-        return money_get
+    def destroy_house(self,position,player_name ):
+        if self._deck[position].destroy_house() :
+            return self.price_for_house(position) * 0.5
+        return 0
 
+    def mourtage(self, position):
+        if not self._deck[position].is_mourtage():
+            self._deck[position].change_mourtage(True)
+            return self._deck[position].mourtage_price()
+        return 0  
 
-    def unmourtage(self, building, player):
-        a = deck_buldings_ordered
-        a[a.index(building)].is_mourtaged = False
-        money_get = a[a.index(building)].mourtage_price()
-        player_list[ player_list.index(player)].budget =  player_list[ player_list.index(player)].budget-money_get
-        deck_buldings_ordered = a
-        return money_get
+    def unmourtage(self, position):
+        if self._deck[position].is_mourtage():
+            self._deck[position].change_mourtage(False)
+            return self._deck[position].mourtage_price()
+        return 0
+    
+    
+    def is_owned(self, position,player_name):
+        return self._deck[position].get_owner() == player_name
+    
+    def get_owner(self, position):
+        return self._deck[position].get_owner()
     
 
     
 
-    
-
-
-    """ 
-    def roll_dice(self, player_name):
-        return result from 2 rolled dices and print smth
-
-
-
-
-        """

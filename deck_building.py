@@ -28,9 +28,9 @@ class deck_building:
         self.fee_with_four_house = fee_with_four_house
         self.fee_with_five_house = fee_with_five_house
 
-        self.players_on_building = players_on_building
+        self.players_on_building = list (players_on_building)
         self.is_mourtaged = is_mourtaged
-        self.owner = owner
+        self.owner = str(owner)
 
         self.picture = picture  # optional
         self.house_count = 0  # (4<= houses ,  5==hotel)!!!!!!!!
@@ -40,24 +40,26 @@ class deck_building:
                                self.fee_with_three_house,
                                self.fee_with_four_house,
                                self.fee_with_five_house]
-
+    def house_cost(self): 
+        return self.perhouse_price
+    
     def get_price(self):
         return self.building_price
 
     def mourtage_price(self):
         return self.building_price / 2
-
+    
     def add_player(self,player_name):
         if player_name not in self.players_on_building:
             self.players_on_building.append(player_name)
-
+    
     def delete_player(self,player_name):
         if player_name  in self.players_on_building:
             self.players_on_building.remove(player_name)
-
+    
     def all_players(self):
         return self.players_on_building
-
+    
     def buy_building(self, player_name):
         self.owner = player_name
         
@@ -94,6 +96,13 @@ class deck_building:
                 self.house_count = self.house_count + 1
                 return True
         return False
+    
+    def destroy_house(self):
+        if not self.is_mourtage() :
+            if self.house_count > 0:
+                self.house_count = self.house_count - 1
+                return True
+        return False
 
     def is_mourtage(self):
         return self.is_mourtaged != False
@@ -118,42 +127,3 @@ class deck_building:
               'One house price: ', self.perhouse_price, '\n',
               'Rent: \n'
               'None one two tree four hotel ', self.with_house_fee, '\n')
-
-
-
-
-
-            """ all deck_buildig have :
-    public elements:
-            buildig_name,
-            building_price,
-            color_street, 
-            is_mourtaged, 
-            buildig_fee_globa, 
-            players_on_building = []
-            owner='Bank', 
-            picture=None
-    functions:
-        __str__(self)
-        mourtage_price(self)
-        hotel(self) """
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-old formula
-        self.with_house_fee = [self.buildig_fee_globa,
-                               5 * self.buildig_fee_globa, 
-                               15 * self.buildig_fee_globa,
-                               45 * self.buildig_fee_globa,
-                               62 * self.buildig_fee_globa,
-                               80 * self.buildig_fee_globa]"""
