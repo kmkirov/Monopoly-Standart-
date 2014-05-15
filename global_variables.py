@@ -1,10 +1,31 @@
+COMMUNITY_CHEST = (['Advance to Go (collect $200)', [200, 0]],
+                   ['Go to jail – go directly to jail – Do not pass Go, do not collect $200', [0,10]],
+                   ['You are assessed for street repairs – $40 per house, $115 per hotel', [40,115]],
+                   
+                   
+                   
+                   
+                   ['Get out of jail free – this card may be kept until needed, or sold', []],
+                   
+                   
+                   ['It is your birthday Collect $10 from each player', [10]],
+                   ['Grand Opera Night – Collect $50 from every player for opening night seats', [50]],
+                   
+                                      
+                   ['Pay Hospital Fees of $100', [100]],
+                   ['Pay School Fees of $50', [50]] ,
+                   ['Doctor\'s fees – Pay $50', [50]],
 
-BUILDING_NAMEORDER = [building.get_building_name() for building in list_of_buildings]
+                   ['Income Tax refund – collect $20',[ 20]],
+                   ['Bank error in your favor – collect $75', [75]],
+                   ['Life Insurance Matures – collect $100', [100]],
+                   ['Receive $25 Consultancy Fee (collect)', [25]],                   
+                   ['You have won second prize in a beauty contest– collect $10', [10]],
+                   ['You inherit $100 (collect )', [100]],
+                   ['From sale of stock you get $50 (collect)', [50]],
+                   ['Holiday Fund matures - Receive $100 (collect)', [100]]
+                )
 
-
-
-
-#Community Chest list:
 lucky_regex = {'Get_money':r'collect',
                'Pay_money':r'Collect',
                'Jail_free':r'Get out of jail free',
@@ -16,119 +37,81 @@ lucky_regex = {'Get_money':r'collect',
                'utility' : r'utility',
                'pay_each' :r'pay each player',
                'Spaces' : r'back 3 spaces'
+              }     
+
+BANK='BANK'
+CHANCE = ( ['Advance to Go (collect $200)', [200,0]],
+           ['Advance to Illinois Ave.', [200,24]],
+           ['Take a walk on the Boardwalk – advance token to Boardwalk', [0,39]],
+           ['Go directly to Jail – do not pass Go, do not collect $200', [0,10]],
+           ['Advance to St. Charles Place – if you pass Go, collect $200', [200,11]],
+           ['Take a trip to Reading Railroad – if you pass Go collect $200', [200,  5]],
+           
+           ['Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned,\
+              throw dice and pay owner a total ten times the amount thrown.', [12,28,10]],
+           
+           ['Advance token to the nearest Railroad and pay owner twice the rental to which she is otherwise entitled.\
+             If Railroad is unowned, you may buy it from the Bank. (There are two of these.)', [5,15,25,35]],
+           ['Advance token to the nearest Railroad and pay owner twice the rental to which he/she is otherwise entitled.\
+             If Railroad is unowned, you may buy it from the Bank. (There are two of these.)',[5,15,25,35]],   
+           
+
+           ['Go back 3 spaces', [-3]],
+          
+   
+           ['Get out of Jail free – this card may be kept until needed, or traded/sold', []],
+           
+           ['Make general repairs on all your property – for each house pay $25 – for each hotel $100', [25,100]],
+
+           ['Pay poor tax of $15', [15]],
+          
+           ['Bank pays you dividend of $50 (collect)', [50]],
+           ['You have been elected chairman of the board – pay each player $50', [50]],
+           ['Your building loan matures collect $150', [150] ],
+           ['You have won a crossword competition - collect $100 ', [100]]
+           )
+GO_MONEY =200
+#if da e duma, ne e napraveno
+lucky_regex = {'Get_money':r'collect',
+               'nearest' :r'nearest',
+               'If':r'if',               
+               'Jail_free':r'Get out of jail free',
+               'Jail_in':r'Go to jail',
+               'Pay': r'Pay',
+               'Hotel_pay':r'hotel', 
+               'Go_option':r'Advance',
+               'Each':r'(each|every)',
+               'utility' : r'utility',
+               'pay_each' :r'pay each player',
+               'Spaces' : r'back 3 spaces',
+                'Collect' : 'Collect'
               }
-def Community(self, player_index, index_community):
-
-    """
-    sluchaite sa 1) advance to go pos 0 + 200$
-                 2) play each - money
-                 3) jail card
-                 4) go to jail
-                 5) pay for hotel 
-                 6) just pay
-                 7)just collect
-                 8)error
-    """
-    card_chest = COMMUNITY_CHEST[index_community]
-    if bool(re.search(lucky_regex['Go_option'], card_chest[0])) and bool(re.search(just_pay, card_chest[0])):
-        new_pos = move_player_from_to(player_list[player_index].possition,\
-          len(list_of buildings) - player_list[player_index].possition + 1,player_list[player_index].name())
-        player_list[player_index].possition = new_pos
-        player_list[player_index].add_money(200)
-
-    elif bool(re.search(everybody_pay, card_chest[0])) and bool(re.search(everybody_pay, card_chest[0])): 
-        for index, player in  enumerate(player_list):
-            if index != player_index:
-                player_list[index].add_money(card_chest[1])
-                player_list[player_index].add_money(-card_chest[1])
-
-    elif bool(re.search(jail_free, card_chest[0])):
-        player_list[player_index].append(1)
-
-    elif bool(re.search(jail_in, card_chest[0])):        
-        new_pos = move_player_from_to(player_list[player_index].possition,\
-          10 - player_list[player_index].possition,player_list[player_index].name())
-        player_list[player_index].possition(10)
-
-    elif bool(re.search(hotel_pay, card_chest[0])):
-        counter_houses = 0
-        counter_hotels = 0
-        for i in list_of buildings:
-            if i.owner == player_list[player_index].name()
-                counter_hotels = i.count_houses()
-                counter_houses = i.count_houses()
-        player_list[player_index].add_money(-(counter_houses*card_chest[1]+counter_hotels*card_chest[2]))
-
-    elif bool(re.search(pay, card_chest[0])):
-        player_list[player_index].add_money(-card_chest[1] )
-
-    elif bool(re.search(just_pay, card_chest[0])):
-        player_list[player_index].add_money(card_chest[1] )
-    else :
-      print('test again !! fun Community ')
 
 
-COMMUNITY_CHEST = [['Advance to Go (collect $200)', 200, 0],
-                   ['Bank error in your favor – collect $75', 75],
-                   ['Doctor\'s fees – Pay $50', 50],
-                   ['Get out of jail free – this card may be kept until needed, or sold', 1],
-                   ['Go to jail – go directly to jail – Do not pass Go, do not collect $200', 10],
-                   ['It is your birthday Collect $10 from each player', 10],
-                   ['Grand Opera Night – Collect $50 from every player for opening night seats', 50],
-                   ['Income Tax refund – collect $20', 20],
-                   ['Life Insurance Matures – collect $100', 100],
-                   ['Pay Hospital Fees of $100', 100],
-                   ['Pay School Fees of $50', 50] ,
-                   ['Receive $25 Consultancy Fee (collect)', 25],
-                   ['You are assessed for street repairs – $40 per house, $115 per hotel', 40,115],
-                   ['You have won second prize in a beauty contest– collect $10', 10],
-                   ['You inherit $100 (collect )', 100],
-                   ['From sale of stock you get $50 (collect)', 50],
-                   ['Holiday Fund matures - Receive $100 (collect)', 100]
-                  ]
+
+DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3,
+                  'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
 
 
 
 
 
 
-def Chance(self, player_index, index_community):
-    card_chans = CHANCE[index_chance]   
-    if bool(re.search(spaces, card_chest[0])):
-        new_pos = move_player_from_to(player_list[player_index].possition,\
-          len(list_of buildings) - player_list[player_index].possition + 1,player_list[player_index].name())
-        player_list[player_index].possition = new_pos
-        return new_pos
-
-    elif bool(re.search(go_option, card_chest[0])) and bool(re.search(go_option, card_chest[0])):
-        
 
 
 
 
-CHANCE = [ ['Advance to Go (collect $200)', 200],
-          ['Advance to Illinois Ave.', index[ave]],
-          ['Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned,\
-              throw dice and pay owner a total ten times the amount thrown.', 2x],
-          ['Advance token to the nearest Railroad and pay owner twice the rental to which he/she is otherwise entitled.\
-             If Railroad is unowned, you may buy it from the Bank. (There are two of these.)', 2x],
-          ['Advance token to the nearest Railroad and pay owner twice the rental to which he/she is otherwise entitled.\
-             If Railroad is unowned, you may buy it from the Bank. (There are two of these.)', 2x],   
-          ['Advance to St. Charles Place – if you pass Go, collect $200', 200],
-          ['Bank pays you dividend of $50 (collect)', 50,
-          ['Get out of Jail free – this card may be kept until needed, or traded/sold', jail],
-          ['Go back 3 spaces', cur[index - 3]],
-          ['Go directly to Jail – do not pass Go, do not collect $200', 200],
-          ['Make general repairs on all your property – for each house pay $25 – for each hotel $100', perhotel],
-          ['Pay poor tax of $15', 15],
-          ['Take a trip to Reading Railroad – if you pass Go collect $200', 200 + indexdetect],
-          ['Take a walk on the Boardwalk – advance token to Boardwalk', index],
-          ['You have been elected chairman of the board – pay each player $50', 50 each]
-          ['Your building loan matures – collect $150', 150],
-          ['You have won a crossword competition - collect $100 ', 100]  ]
 
-DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3, 'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
-LIST_OF_BUILDINGS = [
+
+
+
+
+
+
+
+
+from building import deck_building
+LIST_OF_BUILDINGS = (
     deck_building('GO', 'FREE', 0, 0, 0),
     deck_building('Mediterranean Ave.',  'Purple', 60,
                   50, 2, 10,     30,     90,  160,   250),
@@ -190,21 +173,8 @@ LIST_OF_BUILDINGS = [
     deck_building('Luxyry Tax','TAX',0,0 ,75),
     deck_building('Boardwalk', 'Dark-Blue',       400,
                   200, 50, 200,     600,  1400,    1700, 2000)
-]
-
-#groups of buildings
-
-can_build_groups = [['Mediterranean Ave.', 'Baltic Ave.'],
-                    ['Oriental Ave.', 'Vermont Ave.', 'Connecticut Ave.'],
-                    ['St. Charles Place', 'States Ave.', 'Virginia Ave.'],
-                    ['St. James Place', 'Tennessee Ave.', 'Pentonville Road'],
-                    ['The Angel Islington', 'Euston Road', 'New York Ave.'],
-                    ['Kentucky Ave.', 'Indiana Ave.', 'Illinois Ave.'],
-                    ['Atlantic Ave.', 'Ventnor Ave.', 'Marvin Gardens'],
-                    ['Pacific Ave.', 'North Carolina Ave.',
-                        'Pennsylvania Ave.'],
-                    ['Park Place', 'Boardwalk']
-                    ]
+)
+BUILDING_NAMEORDER = [building.get_name() for building in LIST_OF_BUILDINGS]
 
 
 
