@@ -95,5 +95,7 @@ multiplayer и чат няма да има,
 
 licence MIT
 
+###Източници:
+
 [rules](http://richard_wilding.tripod.com/monorules.htm)
 [original game](http://game.zylom.com/servlet/Entry?g=49&s=9654&nocache=1400347581596)
