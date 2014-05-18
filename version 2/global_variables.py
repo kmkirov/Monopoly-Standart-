@@ -1,4 +1,4 @@
-COMMUNITY_CHEST = [['Advance to Go (collect $200)', [200, 0]],
+COMMUNITY_CHEST = (['Advance to Go (collect $200)', [200, 0]],
                    ['Go to jail – go directly to jail – Do not pass Go, do not collect $200', [0,10]],
                    ['You are assessed for street repairs – $40 per house, $115 per hotel', [40,115]],
                    
@@ -24,7 +24,7 @@ COMMUNITY_CHEST = [['Advance to Go (collect $200)', [200, 0]],
                    ['You inherit $100 (collect )', [100]],
                    ['From sale of stock you get $50 (collect)', [50]],
                    ['Holiday Fund matures - Receive $100 (collect)', [100]]
-                ]
+                )
 
 lucky_regex = {'Get_money':r'collect',
                'Pay_money':r'Collect',
@@ -40,7 +40,7 @@ lucky_regex = {'Get_money':r'collect',
               }     
 
 BANK='BANK'
-CHANCE = [ ['Advance to Go (collect $200)', [200,0]],
+CHANCE = ( ['Advance to Go (collect $200)', [200,0]],
            ['Advance to Illinois Ave.', [200,24]],
            ['Take a walk on the Boardwalk – advance token to Boardwalk', [0,39]],
            ['Go directly to Jail – do not pass Go, do not collect $200', [0,10]],
@@ -69,7 +69,7 @@ CHANCE = [ ['Advance to Go (collect $200)', [200,0]],
            ['You have been elected chairman of the board – pay each player $50', [50]],
            ['Your building loan matures collect $150', [150] ],
            ['You have won a crossword competition - collect $100 ', [100]]
-           ]
+           )
 GO_MONEY =200
 #if da e duma, ne e napraveno
 lucky_regex = {'Get_money':r'collect',
@@ -108,12 +108,11 @@ DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3,
 
 
 
-FORBIDDEN = [0,2,4,7,10,17,20,22,30,33,36,38]
 
 
 from building import deck_building
-LIST_OF_BUILDINGS = [
-    deck_building('GO', 'FREE', 0, 0, 0),   
+LIST_OF_BUILDINGS = (
+    deck_building('GO', 'FREE', 0, 0, 0),
     deck_building('Mediterranean Ave.',  'Purple', 60,
                   50, 2, 10,     30,     90,  160,   250),
     deck_building('Comunity Chest', 'CC', 0, 0),
@@ -124,7 +123,6 @@ LIST_OF_BUILDINGS = [
     deck_building('Oriental Ave.',       'Light-Green', 100,
                   50, 6, 30,     90,   270,  400,   550),
     deck_building('CHANCE', 'C', 0, 0),
-    
     deck_building('Vermont Ave.',      'Light-Green', 100,
                   50, 6, 30,     90,  270,  400,   550),
     deck_building('Connecticut Ave.',    'Light-Green', 120,
@@ -148,7 +146,6 @@ LIST_OF_BUILDINGS = [
     deck_building('Free Parking', 'FREE', 0, 0, 0),
     deck_building('Kentucky Ave.', 'Red',  220,
                   150, 18, 90,   250, 700, 875, 1050),
-    deck_building('CHANCE', 'C', 0, 0),
     deck_building('Indiana Ave.', 'Red',  220,
                   150, 18, 90,     250,  700,  875,  1050),
     deck_building('Illinois Ave.', 'Red',  240,
@@ -175,8 +172,8 @@ LIST_OF_BUILDINGS = [
                   200, 35, 175,     500,  1100,   1300, 1500),
     deck_building('Luxyry Tax','TAX',0,0 ,75),
     deck_building('Boardwalk', 'Dark-Blue',       400,
-                  200, 50, 200,     600,  1400,    1700, 2000),
-]
+                  200, 50, 200,     600,  1400,    1700, 2000)
+)
 BUILDING_NAMEORDER = [building.get_name() for building in LIST_OF_BUILDINGS]
 
 
