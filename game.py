@@ -12,6 +12,7 @@ class Game:
     
     
     def __init__(self):
+        self.current_player_index = 0
         self._deck = playing_deck(list(LIST_OF_BUILDINGS)) #igralnoto pole
         self._bancrupt_players = list()
         self.player_list = list()
@@ -26,10 +27,27 @@ class Game:
         self._auction_price = 0
         self._auction_players_names=list()
         self._auction_winner=str('')
-        
-    
-         
 
+    #def current_player_index(self):
+        #return self._turn_index
+    def has_house_on_building(self, building_index,player_name):       
+        if player_name == self._deck[building_index].get_owner():
+            if self._deck[building_index].has_hotel() or self._deck[building_index].count_houses:
+                return False
+        return True
+    
+    def get_all_players(self):
+        return self.PLAYER_NAMEORDER
+    
+    def get_playername_by_index(self, index):
+        return self.PLAYER_NAMEORDER[index]
+    
+    def get_current_playing_index(self): #index of current player
+        return self.current_player_index
+    
+    def next_player_turn(self): 
+        self.current_player_index = self.current_player_index + 1
+        
     def shuffler(self):
         for i in range(random.randint(5,10)):
             random.shuffle(self._CHANCE)
@@ -130,7 +148,8 @@ class Game:
                 return i
         return listed_places[0]
                 
-
+    
+    
     def is_owned(self, building_index, player_name): #checked in game_test_only
         if player_name == self._deck[building_index].get_owner():
             return True
@@ -170,7 +189,9 @@ class Game:
         if self.can_mourtage_0_unmourtage_1(player_name,building_index,0):
             self._deck[building_index].change_mourtage(True)
             self.add_money(player_name,self._deck[building_index].mourtage_price())
-            
+            return True
+        else :
+            return False
 
         
     def unmourtage(self, player_name, building_index): #checked in game_test_only
@@ -178,6 +199,9 @@ class Game:
         if self.can_mourtage_0_unmourtage_1(player_name,building_index,1):
             self._deck[building_index].change_mourtage(False)
             self.pay_money(player_name,self._deck[building_index].mourtage_price())
+            return True
+        else:
+            return False
 
 
 
@@ -195,6 +219,7 @@ class Game:
         building_name = BUILDING_NAMEORDER[building_index]
         color = self._deck[building_index].get_color()
         buildings = self.player_items(player_name)
+        # da proverq dali e mortaged
         if self.is_owned( building_index, player_name) and self.has_line(color, buildings):
             if self._deck[building_index].build_house() and self.can_pay(player_name,self._deck[building_index].house_cost()):
                 self.pay_money(player_name,self._deck[building_index].house_cost())
@@ -232,19 +257,27 @@ class Game:
         player_index = self.player_index(player_name)
         self.player_list[player_index].add_item(building_name,self._deck[building_index])
         
-    def trade_buildings(self,ofer_maker,ofer_maker_items_names, buyer,buyer_items_names ):#checked in game_test_only
-        ofered_items_indexes = [BUILDING_NAMEORDER.index(i)  for i in ofer_maker_items_names]
-        buyer_items_indexes = [BUILDING_NAMEORDER.index(i)  for i in buyer_items_names ]
-        for i in ofered_items_indexes:
+    def trade_buildings(self,ofer_maker,ofer_maker_items_index, buyer,buyer_items_index ):#prima list ot chisla 
+        ofered_items_names = [BUILDING_NAMEORDER[i]  for i in ofer_maker_items_index]
+        buyer_items_names = [BUILDING_NAMEORDER[i]  for i in buyer_items_index ]
+        #ne sym proveril za tova dali ima kushti vurhu sgradite.. tova se proverqva v igrata
+        for building in  buyer_items_index:
+            if self.has_house_on_building(building,buyer):
+               return False
+        for building in  ofer_maker_items_index:
+            if self.has_house_on_building(building,ofer_maker):
+               return False
+        for i in ofer_maker_items_index:
             self._deck[i].buy_building(buyer)
-        for i in buyer_items_indexes:
+        for i in buyer_items_index:
             self._deck[i].buy_building(ofer_maker)
-        for i in ofer_maker_items_names:
+        for i in ofered_items_names:
             self._add_building_to_player(buyer,i)
             self._remove_building_from_player(ofer_maker,i)
         for i in buyer_items_names:
             self._add_building_to_player(ofer_maker,i)
             self._remove_building_from_player(buyer,i)
+        return True
             
             #index ++ !!!!!
 
@@ -433,21 +466,6 @@ class Game:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def community_chest(self, player_name):  
         card_chest = self._COMMUNITY_CHEST[self._comunity_chest_index] #izbiram karta
 
@@ -584,8 +602,65 @@ class Game:
 
        """
             
-            
-                
+"""          
+    def check_position(self, index, player_name):
+        if list_of buildings[index].owner = player_name:
+            return 'O'
+        elif list_of buildings[index].color_street == 'FREE':
+            return 'F'
+        elif list_of buildings[index].color_street == 'TAX':
+            return 'T'
+        elif list_of buildings[index].color_street == 'utility':
+            return 'U'
+        elif list_of buildings[index].color_street == 'STATION':
+            return 'S'
+        elif list_of buildings[index].color_street == 'CC':
+            return 'CC'
+        elif list_of buildings[index].color_street == 'C':
+            return 'C'
+        elif list_of buildings[index].color_street == 'JAIL':
+            return 'J'
+        else:
+            return 'B'
+
+    def player_action_after_step(self, command, player_index, building_index):
+        building_name = list_of buildings[building_index].get_building_name()
+        if command == 'F' or command == 'O':
+            return
+        elif command == 'T':
+            player_list[player_index].add_money(-list_of buildings[building_index].buildig_fee_globa)
+        elif command == 'U':
+            a = random.randrange(1,7)
+            b = random.randrange(1,7)
+            if  index_of_owner('Electronic Company') == index_of_owner('Water Work'):
+                player_list[player_index].add_money(-((a+b)*10))
+            else :
+                player_list[player_index].add_money(-((a+b)*4))
+        elif command == 'S':
+            STATION_FEE =[25,50,100,200]
+            happy_player_index = index_of_owner(self,building_name)
+            owned_types = player_type_of_buildings( happy_player_index)
+            player_list[happy_player_index].add_money(STATION_FEE[owned_types.count('STATION')-1])
+            player_list[player_index].add_money(-STATION_FEE[owned_types.count('STATION')-1])
+
+        elif command == 'CC':
+            Community(self, player_index, self.comunity_chest_index)
+        elif command == 'C':
+            Chance(self, player_index, self.chance_index)
+
+        elif command == 'J':
+            move_pos_pos(building_index, 10 ,player_list[player_index].name())
+        else: 
+            if   list_of buildings[building_index].can_buy():
+                print ('auction or buy')
+                answer = input()
+            else:
+                player_list[player_index].add_money(-list_of buildings[building_index].take_fee())
+                happy_player_index = index_of_owner(self,building_name)
+                owned_types = player_type_of_buildings( happy_player_index)
+                player_list[happy_player_index].add_money(list_of buildings[building_index].take_fee())
+
+        """   
 
 
 
