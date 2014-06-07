@@ -1,17 +1,26 @@
 import re
 
-import player, building , map
+
+from map import * 
+from player import Player
+from building import building
+from global_variables import *
 JAIL_FEE = 50
 FREE_FROM_JAIL = False
 MUST_PAY_JAIL = 2
+GO_MONEY = 200
 
 class Game():
-    def __init__(self,mapa):
+    def __init__(self):
         self.players = list()
-        self.mapa = mapa
+        self.mapa = mapa()
+        self._COMMUNITY_CHEST = list(COMMUNITY_CHEST)
+        self._comunity_chest_index = 0
+        self._CHANCE = list(CHANCE)
+        self._chance_index = 0
         self.current_player = 0
 
-    def roll_dice(self): #checked in game_test_only
+    def roll_dice(self):
         a = random.randrange(1,7)
         b = random.randrange(1,7)
         #logging
@@ -37,29 +46,27 @@ class Game():
     def end_turn(self):
         self.current_player = (self.current_player + 1)% len(self.players)
 
-    def buy_building(self, building_index):
-        mapa.buy_building(building_index, self.players[self.current_player])
+    def buy_building(self, building_index,auction):
+        return self.mapa.buy_building(building_index, self.players[self.current_player],auction)
 
-    def trade_buildings(offerer,offerer_buildings_index,offerer_money,receiver_name, receiver_buildings_index, receiver_money):
-        index = [player.playername() for player in self.players].index(receiver_name)
-        map.trade_buildings(self.players[self.current_player],offerer_buildings_index,offerer_money,self.players[index], receiver_buildings_index, receiver_money)
+    def trade_buildings(self,offerer,offerer_buildings_index,offerer_money,receiver_name, receiver_buildings_index, receiver_money):
+        names = [player.playername() for player in self.players ]
+        index = names.index(receiver_name)
+        return self.mapa.trade_buildings(self.players[self.current_player],offerer_buildings_index,offerer_money,self.players[index], receiver_buildings_index, receiver_money)
     
     def mourtage(self, building_index):
-        self.mapa[building_index].mourtage(self.players[self.current_player])
+        return self.mapa[building_index].mourtage(self.players[self.current_player])
 
     def unmourtage(self, building_index):
-        self.mapa[building_index].unmourtage(self.players[self.current_player])
+        return self.mapa[building_index].unmourtage(self.players[self.current_player])
 
     def build_house(self,building_index):
-        self.mapa[building_index].build_house(self.players[self.current_player])
+        return self.mapa[building_index].build_house(self.players[self.current_player])
 
     def sell_house(self, building_index):
-        self.mapa[building_index].sell_house(self.players[self.current_player])
+        return self.mapa[building_index].sell_house(self.players[self.current_player])
     
-    def take_fee(self,building_index):
-        result = self.mapa[building_index].take_fee(self.players[self.current_player])
-        if renting_result in ['comuniti chest', 'chance']:pass
-        if chance() == 'buy':pass
+    
  
     def move_player(self, steps ,player):
         if not self.playes[self.current_player].jail():             
@@ -90,10 +97,7 @@ class Game():
         #self.endturn()
 
 
-    """def move_by_rolled(self,steps):
-        if   self.players[self.current_player].jail != False:
-            return JAIL   #can return jail
-        return  self.mapa.move_player( steps ,self.players[self.current_player])"""
+    
     def shuffler(self): #ne raboti !!!
         for i in range(random.randint(5,10)):
             random.shuffle(self._CHANCE)
@@ -103,7 +107,10 @@ class Game():
 
     
     
-    
+    def take_fee(self,building_index):
+        result = self.mapa[building_index].take_fee(self.players[self.current_player])
+        if renting_result in ['comuniti chest', 'chance']:pass
+        if chance() == 'buy':pass
     
     def __nearest_pos_from_list( self, player_pos ,listed_places): #checked in game_test_only
         for i in listed_places:
@@ -113,7 +120,7 @@ class Game():
 
 
 
-    def community_chest(self, player):  
+    def community_chest(self,player):  
         card_chest = self._COMMUNITY_CHEST[self._comunity_chest_index] #izbiram karta
 
         mesg = card_chest[0]#suobshtenieto koeto shte vurnem
@@ -129,21 +136,21 @@ class Game():
 
         second_len = len(card_chest[1])#bezpolezen ..:)                                   
         if travel and get_money and second_len == 2 : #advance to go only
-            self.self.mapa.move_player_to_position(self.players[self.current_player],command[1])#map
+            self.mapa.move_player_to_position(player,command[1])#map
             player.add_money(command[0])
 
         elif second_len == 0 and free_jail:# ne se poddyrja
-            self.player_list[self.player_index(player_name)].add_jail_card()
-
+            #self.players [self.current_player].add_jail_card()
+            pass
         elif second_len == 2 and pay_hotel:
             money = player.house_and_hotels_counter()
             player.pay_money(command[0] * money[0] + command[1] * money[1])
                                          
         elif everybody and  many :
-            player.add_money(command[0]*(len(self.player_list)-1))
+            player.add_money(command[0]*(len(self.players)-1))
             for i in self.players :
-                if self.players[i] != player:
-                    self.players[i].pay_money(command[0])
+                if i != player:
+                    i.pay_money(command[0])
                 
         elif just_pay:
             player.pay_money(command[0])
@@ -180,7 +187,7 @@ class Game():
                 player.add_money( 200)#minava go
                 
             nearest = self.__nearest_pos_from_list(  player_pos ,card_chest[1])
-            self.self.mapa.move_player_to_position(self.players[self.current_player],nearest)
+            self.mapa.move_player_to_position(player,nearest)
             if self.mapa[nearest].have_owner() == '':
                 return 'buy'
             self.mapa[nearest].get_rent(player)
@@ -188,28 +195,29 @@ class Game():
 
         elif travel and nearest and second_len > 3: #vlakovete
             nearest = self.__nearest_pos_from_list(  player_pos ,card_chest[1])
-            self.self.mapa.move_player_to_position(self.players[self.current_player],nearest)            
-            if player_pos > card_chest[1][-1]:
+            self.self.mapa.move_player_to_position(player,nearest)            
+            if player_pos >= card_chest[1][-1]:
                 player.add_money( GO_MONEY)#minava go
             if self.mapa[nearest].have_owner() == '':              
                 return 'buy'#ako ne e kupeno
             self.mapa[nearest].get_rent(player) 
 
         elif travel and get_money and second_len == 2 : #advance to + 200 if
-            if player_pos > card_chest[1][-1]:
+            if player_pos >= card_chest[1][-1]:
                 player.add_money( GO_MONEY)
-            self.self.mapa.move_player_to_position(self.players[self.current_player],command[1]) 
-            self.mapa[nearest].get_rent(player)
+            self.mapa.move_player_to_position(player,command[1]) 
+            self.mapa[nearest].take_fee(player)
             
 
         elif spaces and second_len == 1: # 3 spaces back
-            self.self.mapa.move_player_to_position(self.players[self.current_player],command[1]) 
+            self.mapa.move_player_to_position(player,command[1]) 
             if self.mapa[player_pos - 3].have_owner() == '':              
                 return 'buy'
             self.mapa[nearest].get_rent(player)
         
         elif second_len == 0 and free_jail: # jail card 
-            self.player_list[self.player_index(player_name)].add_jail_card()
+            pass
+            #self.self.players[self.current_player].add_jail_card()
             
         elif second_len == 2 and pay_hotel: #pay for repairs
             money = player.house_and_hotels_counter()
@@ -225,4 +233,7 @@ class Game():
             raise('errr chance '+ mesg)
         self._chance_index = self._chance_index + 1
         return mesg
-            
+    """def move_by_rolled(self,steps):
+        if   self.players[self.current_player].jail != False:
+            return JAIL   #can return jail
+        return  self.mapa.move_player( steps ,self.players[self.current_player])"""
