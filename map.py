@@ -4,8 +4,9 @@ from  building import *
 from global_variables import LIST_OF_BUILDINGS
 BANK = 'BANK'
 CONST_HOUSE = 5
-class playing_deck:
-    def __init__(self, deck ):
+FORBIDDEN = [0,2,4,7,10,17,20,22,30,33,36,38]
+class mapa:
+    def __init__(self):
         self._deck = list(LIST_OF_BUILDINGS)
     
     def __getitem__(self,i):
@@ -14,14 +15,25 @@ class playing_deck:
     #def get_building(self, building_position):
     #    return self._deck[building_position]
 
-    def buy_building(building_index,player,auction):
-        self._deck[building_index].buy_building(player,auction)
-        player.add_item(self._deck[building_index])
+    def buy_building(self,building_index,player,auction):
+        if building_index in FORBIDDEN:
+            return False
+
+        if self._deck[building_index].buy_building(player,auction):
+            player.add_items(self._deck[building_index])
+            return True
+        return False
     
-    def trade_buildings(offerer,offerer_buildings_index,offerer_money,receiver, receiver_buildings_index, receiver_money):
-        offerer_buildings = [self._deck[i] for i in offerer_buildings_index]
-        receiver_buildings = [self._deck[i] for i in receiver_buildings_index]
-        if not set(offerer_buildings).issubset(offerer.get_items()) or not  set(receiver_buildings).issubset(receiver.get_items()):
+    def trade_buildings(self,offerer,offerer_buildings_index,offerer_money,receiver, receiver_buildings_index, receiver_money):
+        offerer_buildings = []
+        receiver_buildings = []
+        if offerer_buildings_index > 0:
+            offerer_buildings = [self._deck[i] for i in [offerer_buildings_index] ]
+        if receiver_buildings_index > 0:    
+            receiver_buildings = [self._deck[i] for i in [receiver_buildings_index]]
+        
+        if not set(offerer_buildings).issubset(offerer.get_items()) or\
+         not  set(receiver_buildings).issubset(receiver.get_items()):
             return False # some of buildings are not owned  ...
         
         for building in  offerer_buildings:    
@@ -34,36 +46,38 @@ class playing_deck:
             self._deck[self._deck.index(building)].change_owner(offerer) #tell building about new owner
             receiver.get_items().remove(building)   
         
-        if offerer.budget() >= offerer_money and receiver.budget() >= receiver_money:
+        if offerer.player_budget() >= offerer_money and receiver.player_budget() >= receiver_money:
             offerer.add_money(receiver_money)
             offerer.pay_money(offerer_money)
             receiver.add_money(offerer_money)
             receiver.pay_money(receiver_money)
     
      
-    def move_player_by_roll(self,player,steps): #nqma proverka za jal zashtoto se vika ot chest i chance
+    # nqma proverka za jal zashtoto se vika ot chest i chance
+    def move_player_by_roll(self, player, steps): #return old position of the plar
         positions = player.move_from_to(steps)[0]
-        self._deck[positions[0]].remove(player)#ne go polzvam !
-        self._deck[positions[1]].append(player)#ne go polzvam !
-            return positions
+        #self._deck[positions[0]].all_players().remove(player)  # ne go polzvam !
+        #self._deck[positions[1]].all_players().append(player)  # ne go polzvam !
+        return positions
+
     
     def move_player_to_position(self,player,position): #chance and chest
-        positions = player.move_from_to(steps)[0]
+        positions = player.move_from_to(0)[0]
+        counter = 0
         if positions == position: 
-            return True:
-        self._deck[positions].remove(player)#ne go polzvam !
-        self._deck[position].append(player)
+            return True
+        #self._deck[positions].remove(player)#ne go polzvam !
+        #self._deck[position].append(player)
 
         if positions < position:
             self.move_player_by_roll(player,position - positions)            
             return position - positions # kolko stypki da mine gui
-        elif positins > position:
-            counter = 0
-            while positons != position:
+        elif positions > position:            
+            while positions != position:
                 positions = (positions + 1)%len(self._deck)
-                count = count + 1
-            self.move_player_by_roll(player,count)
-            return count
+                counter = counter + 1
+            self.move_player_by_roll(player,counter)
+            return counter #return the number of positions to move ahead...
 
 
         

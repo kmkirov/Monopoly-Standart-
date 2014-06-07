@@ -4,10 +4,11 @@ import player, building , map
 JAIL_FEE = 50
 FREE_FROM_JAIL = False
 MUST_PAY_JAIL = 2
+
 class Game():
     def __init__(self,mapa):
         self.players = list()
-        self.mapa = list(mapa)
+        self.mapa = mapa
         self.current_player = 0
 
     def roll_dice(self): #checked in game_test_only
@@ -56,9 +57,9 @@ class Game():
         self.mapa[building_index].sell_house(self.players[self.current_player])
     
     def take_fee(self,building_index):
-        result = self.mapa[building_index].take_fee(self.players.[self.current_player]))
-        if renting_result in ['comuniti chest', 'chance']:
-        if chance() == 'buy'
+        result = self.mapa[building_index].take_fee(self.players[self.current_player])
+        if renting_result in ['comuniti chest', 'chance']:pass
+        if chance() == 'buy':pass
  
     def move_player(self, steps ,player):
         if not self.playes[self.current_player].jail():             
@@ -67,11 +68,11 @@ class Game():
             return JAIL
 
     def jail_decision(self,money,steps):
-        if money = JAIL_FEE:#pay for freedom
+        if money == JAIL_FEE: #pay for freedom
             self.playes[self.current_player].pay_money(money)
             self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
             self.move_player(steps)
-        elif money = 0 and self.playes[self.current_player].jail() == MUST_PAY_JAIL: #must pay ont 3rd roll
+        elif money == 0 and self.playes[self.current_player].jail() == MUST_PAY_JAIL: #must pay ont 3rd roll
             self.playes[self.current_player].pay_money(JAIL_FEE)
             self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
             self.move_player(steps)
@@ -93,7 +94,7 @@ class Game():
         if   self.players[self.current_player].jail != False:
             return JAIL   #can return jail
         return  self.mapa.move_player( steps ,self.players[self.current_player])"""
-        def shuffler(self):
+    def shuffler(self): #ne raboti !!!
         for i in range(random.randint(5,10)):
             random.shuffle(self._CHANCE)
         for i in range(random.randint(5,10)):
@@ -131,7 +132,7 @@ class Game():
             self.self.mapa.move_player_to_position(self.players[self.current_player],command[1])#map
             player.add_money(command[0])
 
-        elif second_len == 0 and free_jail: ne se poddyrja
+        elif second_len == 0 and free_jail:# ne se poddyrja
             self.player_list[self.player_index(player_name)].add_jail_card()
 
         elif second_len == 2 and pay_hotel:

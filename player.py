@@ -1,7 +1,8 @@
 import re
 
 DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3,
-                  'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
+                  'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2, 
+                  'STATION':0,'TAX':0}
 
 JAIL = 10
 FIELD = 39
@@ -34,15 +35,6 @@ class Player:
 
     def get_items(self):
         return self.list_of_items
-    
-    def add_items(self, items): #test only
-        if items == 'bancrupt':
-            self.list_of_items = list()
-        else :
-            self.list_of_items.append(items)
-
-            
-   
 
     def jail(self):
         return self.in_jail
@@ -52,14 +44,13 @@ class Player:
 
     def move_from_to(self, steps):
 
-        old_position = self.position3
+        old_position = self.position
         self.position = (self.position + steps)  % FIELD
         if self.position == JAIL:
             self.in_jail = 0
         return [old_position,self.position % FIELD]      
 
     
-
     def has_line(self, color):        
         counter = 0
         for i in self.list_of_items:
@@ -76,3 +67,9 @@ class Player:
 
     def __str__(self):
         return self.player_name
+
+    def add_items(self, items): #test only
+        if items == 'bancrupt':
+            self.list_of_items = list()
+        else :
+            self.list_of_items.append(items)
