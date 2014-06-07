@@ -46,14 +46,14 @@ class building:
 
     def mourtage(self, player):
         if self.owner == player and not self.is_mourtaged:
-            player.add(self.building_price * 0.4)
+            player.add_money(self.building_price * 0.4)
             return True
         else:
             return False
 
     def unmourtage(self, player):
         if self.owner == player and not self.is_mourtaged:
-            player.pay(self.building_price / 2)
+            player.pay_money(self.building_price / 2)
             return True
         else:
             return False
@@ -63,19 +63,24 @@ class building:
 
     def delete_player(self, player):
         if player in self.players_on_building:
-            self.players_on_building.remove(playe)
+            self.players_on_building.remove(player)
 
     def all_players(self):
         return self.players_on_building
 
-    def buy_building(self, player, autcion_buy=False):
+    def buy_building(self, player, auctcion_buy=False):
         if self.owner == '' and player.budget >= self.building_price:
             self.owner = player  # change ownar
-            if auction_buy == False:
+            if auctcion_buy == False:
                 # if he buyies it he is on it
                 self.players_on_building.append(player)
-            player.pay(self.building_price)  # player pays for the building
-            return True
+                player.pay_money(self.building_price)  # player pays for the building
+                #test
+                #player.add_items(self) ne
+                return True
+            else :
+                player.pay_money(auctcion_buy)
+                return True
         return False
 
     def house_and_hotels_list(self):
@@ -87,13 +92,21 @@ class building:
             hotel = 0
         return [houses, hotel]
 
-    def bancrupt(self, player):
-        self.owner.append(player.get_items())#take buildings
+    def bancrupt(self, player):#bancrupt a player and add to owner
+        #print(self.owner.get_items())
+        if player == self.owner:
+            return 
+        for item in player.get_items():
+            self.owner.get_items().append(item)
+            item.change_owner(self.owner)  
+
         self.owner.add_money(player.player_budget())#take money
+        player.add_items('bancrupt')
+        #print(self.owner.get_items())
 
 
-    def change_owner(self, player):  # on trade
-        if self.owner != '':
+    def change_owner(self, player):  # on trade only
+        if self.owner != '' and self.house_and_hotels_list() ==[0,0]:
             self.owner = player
             return True
         return False
@@ -104,8 +117,8 @@ class building:
             self.players_on_building.append(player)
 
         if not self.is_mourtaged and self.owner != '':  # take fee from player
-            player.pay_money(self.self.with_house_fee[self.house_count])
-            self.owner.add_money(self.self.with_house_fee[self.house_count])
+            player.pay_money(self.with_house_fee[self.house_count])
+            self.owner.add_money(self.with_house_fee[self.house_count])
             # take money and return
             return 'fee'
         elif self.owner == player:
@@ -130,7 +143,7 @@ class building:
                 return 'utility'
         return self.color_street
 
-    def have_owner():
+    def have_owner(self):
         return self.owner
         
     def build_house(self, player):
@@ -145,7 +158,7 @@ class building:
         if not self.is_mourtaged and self.owner == player:
             if self.house_count > 0:
                 self.house_count = self.house_count - 1
-                player.add_money(self.self.perhouse_price * 0.40)
+                player.add_money(self.perhouse_price * 0.40)
                 return True
         return False
 

@@ -33,9 +33,17 @@ class Player:
         self.budget = self.budget - money    
 
     def get_items(self):
-        return self.list_of_items    
+        return self.list_of_items
+    
+    def add_items(self, items): #test only
+        if items == 'bancrupt':
+            self.list_of_items = list()
+        else :
+            self.list_of_items.append(items)
+
             
-              
+   
+
     def jail(self):
         return self.in_jail
 
@@ -54,7 +62,7 @@ class Player:
 
     def has_line(self, color):        
         counter = 0
-        for i in list_of_items:
+        for i in self.list_of_items:
             if re.search(color, i.get_color()):
                 counter = counter + 1
         return [counter  == DICT_OF_COLORS[color], counter]
