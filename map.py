@@ -27,10 +27,11 @@ class mapa:
     def trade_buildings(self,offerer,offerer_buildings_index,offerer_money,receiver, receiver_buildings_index, receiver_money):
         offerer_buildings = []
         receiver_buildings = []
-        if offerer_buildings_index > 0:
-            offerer_buildings = [self._deck[i] for i in [offerer_buildings_index] ]
-        if receiver_buildings_index > 0:    
-            receiver_buildings = [self._deck[i] for i in [receiver_buildings_index]]
+
+        if 0 not in offerer_buildings_index:           
+                offerer_buildings = [self._deck[i] for i in offerer_buildings_index ]
+        if 0 not in receiver_buildings_index :    
+                receiver_buildings = [self._deck[i] for i in receiver_buildings_index]
         
         if not set(offerer_buildings).issubset(offerer.get_items()) or\
          not  set(receiver_buildings).issubset(receiver.get_items()):
@@ -51,14 +52,17 @@ class mapa:
             offerer.pay_money(offerer_money)
             receiver.add_money(offerer_money)
             receiver.pay_money(receiver_money)
+        else: 
+            return False
+        return True
     
      
     # nqma proverka za jal zashtoto se vika ot chest i chance
     def move_player_by_roll(self, player, steps): #return old position of the plar
-        positions = player.move_from_to(steps)[0]
+        
         #self._deck[positions[0]].all_players().remove(player)  # ne go polzvam !
         #self._deck[positions[1]].all_players().append(player)  # ne go polzvam !
-        return positions
+        pass
 
     
     def move_player_to_position(self,player,position): #chance and chest

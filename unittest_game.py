@@ -67,6 +67,7 @@ class Game_tests(unittest.TestCase):
         self.assertEqual(game.Chance(game.players[1]),'Advance to Go (collect $200)')
         self.assertEqual(game.players[1].player_budget(),2641)
 
+        self.assertEqual(game.move_player_by_rolled(11)[1],11)
 
 
 

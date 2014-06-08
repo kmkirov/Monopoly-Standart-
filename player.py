@@ -1,4 +1,4 @@
-import re
+import re,random
 
 DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3,
                   'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2, 
