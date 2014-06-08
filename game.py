@@ -9,7 +9,7 @@ JAIL_FEE = 50
 FREE_FROM_JAIL = False
 MUST_PAY_JAIL = 2
 GO_MONEY = 200
-
+JAIL = 10
 class Game():
     def __init__(self):
         self.players = list()
@@ -19,16 +19,38 @@ class Game():
         self._CHANCE = list(CHANCE)
         self._chance_index = 0
         self.current_player = 0
-
+        self._draw_dice = False
+        self._draw_counter = 0
+    def __getitem__(self,index_building):
+        return [self.mapa[index_building].building_names(),
+        str(self.players[self.current_player])]
+    def player_Free(self):
+        return not self.players[self.current_player].jail()
+    def current_player_index(self):
+        return self.current_player
+    def icon(self):
+        return self.players[self.current_player].get_picture()[0]
     def roll_dice(self):
         a = random.randrange(1,7)
         b = random.randrange(1,7)
         #logging
-        return [a + b, a==b] #!!!!!  
+               
+        if self._draw_counter == 2 and a==b:
+            steps = self.move_on_position(JAIL)
+            self._draw_counter = 3
+            return [steps,'JAIL']
+        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3:
+            self.end_turn()
+            return [0,'END_TURN']
+        else:
+            self._draw_dice = a == b
+            self._draw_counter = self._draw_counter + 1
+            position = self.move_player_by_rolled(a + b) 
+            return [a + b, a==b,position[0]] #!!!!!  
 
     def register_player(self,name):
         if self._valid_name(name):
-            self.players.append(Player(name))
+            self.players.append(Player(name,len(self.players)))
             return True
         return False
                         
@@ -45,9 +67,56 @@ class Game():
 
     def end_turn(self):
         self.current_player = (self.current_player + 1)% len(self.players)
+        self._draw_dice = 0
+        self._draw_counter = 0
 
     def buy_building(self, building_index,auction):
         return self.mapa.buy_building(building_index, self.players[self.current_player],auction)
+
+    
+    def move_on_position(self,position):
+        return self.mapa.move_player_to_position(self.players[self.current_player],position)
+ 
+    def move_player_by_rolled(self, steps ):
+        
+        if not self.players[self.current_player].jail():             
+            return self.players[self.current_player].move_from_to(steps) #return the positon
+        else:
+            return JAIL
+    def take_fee(self,building_index=0):
+        building_index = self.move_player_by_rolled(0)[0]
+        renting_result = self.mapa[building_index].take_fee(self.players[self.current_player])
+        
+        if renting_result =='CC':
+            return self.community_chest(self.players[self.current_player])
+        if renting_result =='C':
+            return self.Chance(self.players[self.current_player])
+        return renting_result
+        
+    
+    def jail_decision(self,money,steps=0):
+        if money == JAIL_FEE: #pay for freedom
+            self.playes[self.current_player].pay_money(money)
+            self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
+            self.move_player(steps)
+        elif money == 0 and self.playes[self.current_player].jail() == MUST_PAY_JAIL: #must pay ont 3rd roll
+            self.playes[self.current_player].pay_money(JAIL_FEE)
+            self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
+            self.move_player(steps)
+        else:
+            self.playes[self.current_player].change_jail(self.playes[self.current_player].jail() + 1)#+1 for being there
+
+    def bancrupt(self):
+        index = self.move_by_rolled(0)
+        self.mapa[index].bancrupt(self.playes[self.current_player])
+        self.players.pop(self.current_player)
+        #self.endturn()
+
+    def shuffler(self): #ne raboti !!!
+        for i in range(random.randint(5,10)):
+            random.shuffle(self._CHANCE)
+        for i in range(random.randint(5,10)):
+            random.shuffle(self._COMMUNITY_CHEST)
 
     def trade_buildings(self,offerer,offerer_buildings_index,offerer_money,receiver_name, receiver_buildings_index, receiver_money):
         names = [player.playername() for player in self.players ]
@@ -67,50 +136,7 @@ class Game():
         return self.mapa[building_index].sell_house(self.players[self.current_player])
     
     
- 
-    def move_player(self, steps ,player):
-        if not self.playes[self.current_player].jail():             
-            return self.map.move_player_by_roll(self.players[self.current_player],steps) #return the positon
-        else:
-            return JAIL
-
-    def jail_decision(self,money,steps):
-        if money == JAIL_FEE: #pay for freedom
-            self.playes[self.current_player].pay_money(money)
-            self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
-            self.move_player(steps)
-        elif money == 0 and self.playes[self.current_player].jail() == MUST_PAY_JAIL: #must pay ont 3rd roll
-            self.playes[self.current_player].pay_money(JAIL_FEE)
-            self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
-            self.move_player(steps)
-        else:
-            self.playes[self.current_player].change_jail(self.playes[self.current_player].jail() + 1)#+1 for being there
     
-    
-    def move_on_position(self,position):
-        return self.mapa.move_player_to_position(self.players[self.current_player],position)
-
-    def bancrupt(self):
-        index = self.move_by_rolled(0)
-        self.mapa[index].bancrupt(self.playes[self.current_player])
-        self.players.pop(self.current_player)
-        #self.endturn()
-
-
-    
-    def shuffler(self): #ne raboti !!!
-        for i in range(random.randint(5,10)):
-            random.shuffle(self._CHANCE)
-        for i in range(random.randint(5,10)):
-            random.shuffle(self._COMMUNITY_CHEST)
-
-
-    
-    
-    def take_fee(self,building_index):
-        result = self.mapa[building_index].take_fee(self.players[self.current_player])
-        if renting_result in ['comuniti chest', 'chance']:pass
-        if chance() == 'buy':pass
     
     def __nearest_pos_from_list( self, player_pos ,listed_places): #checked in game_test_only
         for i in listed_places:
@@ -230,9 +256,10 @@ class Game():
             player.add_money(money)
         
         else :
-            raise('errr chance '+ mesg)
+           print('errr chance '+ mesg)
         self._chance_index = self._chance_index + 1
         return mesg
+    
     """def move_by_rolled(self,steps):
         if   self.players[self.current_player].jail != False:
             return JAIL   #can return jail

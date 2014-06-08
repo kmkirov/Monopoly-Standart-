@@ -1,5 +1,5 @@
 import player
-
+import random
 
 class building:
 
@@ -43,7 +43,8 @@ class building:
                              self.fee_with_three_house,
                              self.fee_with_four_house,
                              self.fee_with_five_house]
-
+    def building_names(self):
+        return self.building_name 
     def mourtage(self, player):
         if self.owner == player and not self.is_mourtaged:
             player.add_money(self.building_price * 0.4)
@@ -116,6 +117,8 @@ class building:
         if player not in self.players_on_building:
             self.players_on_building.append(player)
 
+        if self.color_street not in ['CC','C','TAX','JAIL','FREE'] and self.owner =='':
+            return 'buy'
         if not self.is_mourtaged and self.owner != '':  # take fee from player
             player.pay_money(self.with_house_fee[self.house_count])
             self.owner.add_money(self.with_house_fee[self.house_count])
@@ -124,21 +127,19 @@ class building:
         elif self.owner == player:
             return 'own'
         elif self.color_street == 'TAX':
-             player.pay_money(self.self.with_house_fee[self.house_count]) 
+             player.pay_money(self.with_house_fee[self.house_count]) 
              return 'TAX'
         elif self.color_street in ['STATION','utility']:
-            if color_street == 'STATION':
-                count_stations = self.owner.has_line('STATION')[1]
+            if self.color_street == 'STATION':
                 money = [25,50,100,200]
-                player.pay_money(money[count_stations])
+                player.pay_money(money[self.owner.has_line('STATION')[1]])
                 self.owner.add_money(money[count_stations])
                 return 'STATION'
             else : 
-                count_stations = self.owner.has_line('utility')[1]
                 a = random.randint(1,7)
                 b = random.randint(1,7)
                 money = [4,10]
-                player.pay_money(( a+ b)*money[count_stations])
+                player.pay_money(( a+ b)*money[self.owner.has_line('utility')[1]])
                 self.owner.add_money(( a+ b)*money[count_stations])
                 return 'utility'
         return self.color_street
@@ -164,4 +165,9 @@ class building:
 
     def __str__(self):
         return self.building_name
+    def __len__(self):
+        return 1
+    #    return self
+    #def __iter__(self):
+    #    return self.__next__()
   

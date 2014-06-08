@@ -365,7 +365,7 @@ def Buyer(game, index,pp):
                 return 'auction'
     return 1
 
-  def Jail(game, index,pp):
+def Jail(game, index,pp):
 
     font = pygame.font.Font(None, 30)    
     textImg = font.render( "   Buy building "+game[index][0], 1, (255,0,0))

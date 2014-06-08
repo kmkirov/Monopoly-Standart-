@@ -187,11 +187,10 @@ def main():
                         if result =='buy':
                             picx,picy = move_icon(roll[0], roll[1],game.current_player_index(),DISPLAYSURF)
                             buy_or_mortage_property(game.current_player_index(), roll[1],DISPLAYSURF,picx,picy)
-                    elif: pass #auction
-
-                    #display_centre(DISPLAYSURF)#, up_x=76 , up_y=74)
-                        #Buyer(game, roll,DISPLAYSURF )
-                        #result = Buyer(game,roll[1],DISPLAYSURF)
+                    else: 
+                        auctioner()
+                        display_centre(DISPLAYSURF)
+                        
                     print('render')
                     players_render(DISPLAYSURF,game)
                     f()

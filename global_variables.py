@@ -5,7 +5,7 @@ COMMUNITY_CHEST = [['Advance to Go (collect $200)', [200, 0]],
                    
                    
                    
-                   ['Get out of jail free – this card may be kept until needed, or sold', []],
+                   ['Get out of jail free' , []], 
                    
                    
                    ['It is your birthday Collect $10 from each player', [10]],
@@ -25,7 +25,7 @@ COMMUNITY_CHEST = [['Advance to Go (collect $200)', [200, 0]],
                    ['From sale of stock you get $50 (collect)', [50]],
                    ['Holiday Fund matures - Receive $100 (collect)', [100]]
                 ]
-
+#– this card may be kept until needed, or sold' 333333
 lucky_regex = {'Get_money':r'collect',
                'Pay_money':r'Collect',
                'Jail_free':r'Get out of jail free',
@@ -91,15 +91,6 @@ lucky_regex = {'Get_money':r'collect',
 
 DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3,
                   'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2}
-
-
-
-
-
-
-
-
-
 
 
 
