@@ -7,7 +7,10 @@ import pygame, pygame.font, pygame.event, pygame.draw, string
 
 from game import Game
 from gui_functions import *
-
+BUY = 0
+MOURTAGE =1
+HOUSE = 2
+MOVE = 3
 def f():
     bg_color = (255, 255, 255)
     text_color = (255,   0,   0)
@@ -164,7 +167,7 @@ def main():
                 mousex, mousey = event.pos
 
                 if roll_button.pressed([mousex,mousey]):
-                    print('rolled pressed')    
+                    """print('rolled pressed')    
                     if not game.player_Free() :
                         a = jail()
                         if a == 'free':
@@ -178,20 +181,22 @@ def main():
                     if len(roll)<2: 
                         display_centre(DISPLAYSURF)
                         break
-                    move_icon(roll[0], roll[1],game.current_player_index(),DISPLAYSURF)#mesti igracha
+                    #move_icon(roll[0], roll[1],game.current_player_index(),,DISPLAYSURF)#mesti igracha
                     fee_result = game.take_fee()
                     display_centre(DISPLAYSURF)
                     if fee_result == 'buy':
                         result = Buyer(game,roll[1],DISPLAYSURF)
                         display_centre(DISPLAYSURF)
                         if result =='buy':
-                            picx,picy = move_icon(roll[0], roll[1],game.current_player_index(),DISPLAYSURF)
-                            buy_or_mortage_property(game.current_player_index(), roll[1],DISPLAYSURF,picx,picy)
-                    else: 
-                        auctioner()
+                            #picx,picy = move_icon(roll[0], roll[1],game.current_player_index(),DISPLAYSURF)
+                            buy_or_mortage_property(game.current_player_index(), roll[1],BUY,DISPLAYSURF)
+                    else:
+                        print('ogromen problem!!!!!! acution e cuknat') 
+                        #auctioner()
                         display_centre(DISPLAYSURF)
                         
-                    print('render')
+                    print('render')"""
+                    buy_or_mortage_property(1, 5 ,BUY,DISPLAYSURF)
                     players_render(DISPLAYSURF,game)
                     f()
                 
@@ -202,12 +207,12 @@ def main():
                 
                 if mourtage.pressed([mousex,mousey]):
                     print('mourtage pressed')
-                    mourtager(game, 'kirakis', DISPLAYSURF)
+                    mourtager(game, DISPLAYSURF)
                     display_centre(DISPLAYSURF)
                
                 if unmourtage.pressed([mousex,mousey]):
                     print('unmourtage pressed')
-                    unmourtager(game, 'az',DISPLAYSURF)
+                    unmourtager(game, DISPLAYSURF)
                     display_centre(DISPLAYSURF)
                 
                 if trade.pressed([mousex,mousey]):
