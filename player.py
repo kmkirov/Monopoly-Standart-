@@ -65,8 +65,8 @@ class Player:
             house,hotel = house + building.house_and_hotels_list()[0], hotel +  building.house_and_hotels_list()[1]
         return [house,hotel]
 
-    def __str__(self):
-        return self.player_name
+    #def __str__(self):
+    #    return self.player_name
 
     def add_items(self, items): #test only
         if items == 'bancrupt':

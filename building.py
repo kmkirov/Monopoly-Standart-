@@ -4,7 +4,7 @@ import random
 class building:
 
     def __init__(self, building_name,
-                 color_street='FREE',
+                 color_street='a',
                  building_price=0,
                  perhouse_price=0,
                  buildig_fee_globa=0,
@@ -13,14 +13,14 @@ class building:
                  fee_with_three_house=0,
                  fee_with_four_house=0,
                  fee_with_five_house=0,
-                 players_on_building=[],
+                 players_on_building=list(),
                  is_mourtaged=False,
-                 owner='BANK',
+                 owner=str(),
                  picture=None
                  ):
 
       self.building_name = building_name
-      self.color_street = color_street  # neighborhood po dobre vunshen
+      self.__color_street = color_street  # neighborhood po dobre vunshen
       self.building_price = building_price
       self.perhouse_price = perhouse_price
       self.buildig_fee_globa = buildig_fee_globa
@@ -33,7 +33,7 @@ class building:
 
       self.players_on_building = list()
       self.is_mourtaged = False
-      self.owner = str()
+      self.owner = ' '
 
       self.picture = picture  # optional
       self.house_count = 0  # (4<= houses ,  5==hotel)!!!!!!!!
@@ -43,6 +43,7 @@ class building:
                              self.fee_with_three_house,
                              self.fee_with_four_house,
                              self.fee_with_five_house]
+
     def building_names(self):
         return self.building_name 
     def mourtage(self, player):
@@ -60,7 +61,7 @@ class building:
             return False
 
     def get_color(self):
-        return self.color_street
+        return self.__color_street
 
     def delete_player(self, player):
         if player in self.players_on_building:
@@ -70,14 +71,13 @@ class building:
         return self.players_on_building
 
     def buy_building(self, player, auctcion_buy=False):
-        if self.owner == '' and player.budget >= self.building_price:
+        #print(player)
+        if  self.owner == ' ' and player.budget >= self.building_price:
             self.owner = player  # change ownar
             if auctcion_buy == False:
                 # if he buyies it he is on it
                 self.players_on_building.append(player)
                 player.pay_money(self.building_price)  # player pays for the building
-                #test
-                #player.add_items(self) ne
                 return True
             else :
                 player.pay_money(auctcion_buy)
@@ -112,28 +112,38 @@ class building:
             return True
         return False
 
-    def take_fee(self, player):
-        # add player to list of players
-        if player not in self.players_on_building:
-            self.players_on_building.append(player)
-
-        if self.color_street not in ['CC','C','TAX','JAIL','FREE'] and self.owner =='':
+    def take_fee(self, player,tax=0):
+        """
+         elif self.owner == ' ': # za krasota da pitam zashto ne raboti
             return 'buy'
-        if not self.is_mourtaged and self.owner != '':  # take fee from player
+
+         elif self.owner == player: #totalno ne raboti
+            return 'own'
+        """
+        print(self.owner,  self.__color_street)
+        if self.__color_street not in ['CC','C','TAX','JAIL','FREE']:
+            print(1)
+            return self.__color_street
+       
+
+        elif not self.is_mourtaged and tax:  # take fee from player
             player.pay_money(self.with_house_fee[self.house_count])
             self.owner.add_money(self.with_house_fee[self.house_count])
             # take money and return
+            print(11)
             return 'fee'
-        elif self.owner == player:
-            return 'own'
-        elif self.color_street == 'TAX':
+        
+        elif self.__color_street == 'TAX':
              player.pay_money(self.with_house_fee[self.house_count]) 
+             print(111)
              return 'TAX'
-        elif self.color_street in ['STATION','utility']:
+
+        elif self.__color_street in ['STATION','utility']:
             if self.color_street == 'STATION':
                 money = [25,50,100,200]
                 player.pay_money(money[self.owner.has_line('STATION')[1]])
                 self.owner.add_money(money[count_stations])
+                print(12)
                 return 'STATION'
             else : 
                 a = random.randint(1,7)
@@ -141,8 +151,10 @@ class building:
                 money = [4,10]
                 player.pay_money(( a+ b)*money[self.owner.has_line('utility')[1]])
                 self.owner.add_money(( a+ b)*money[count_stations])
+                print(112)
                 return 'utility'
-        return self.color_street
+        print(133)
+        return self.__color_street
 
     def have_owner(self):
         return self.owner

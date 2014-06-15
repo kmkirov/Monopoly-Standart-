@@ -21,15 +21,26 @@ class Game():
         self.current_player = 0
         self._draw_dice = False
         self._draw_counter = 0
-    def __getitem__(self,index_building):
-        return [self.mapa[index_building].building_names(),
-        str(self.players[self.current_player])]
+    #def __getitem__(self,index_building):
+    #    return [self.mapa[index_building].building_names(),
+    #    str(self.players[self.current_player])]
+    def bug_fix(self,building_index):
+        for index in range(0,len(self.players)):
+            if index != self.current_player:
+                if self.mapa[building_index] in self.players[index].get_items():
+                    return index
+        return -1
+
+
     def player_Free(self):
         return not self.players[self.current_player].jail()
     def current_player_index(self):
         return self.current_player
     def icon(self):
         return self.players[self.current_player].get_picture()[0]
+    def render_name_and_budget(self):
+        return [self.players[self.current_player].playername(),
+                self.players[self.current_player].player_budget() ]
     def roll_dice(self):
         a = random.randrange(1,7)
         b = random.randrange(1,7)
@@ -83,15 +94,26 @@ class Game():
             return self.players[self.current_player].move_from_to(steps) #return the positon
         else:
             return JAIL
-    def take_fee(self,building_index=0):
-        building_index = self.move_player_by_rolled(0)[0]
-        renting_result = self.mapa[building_index].take_fee(self.players[self.current_player])
-        
-        if renting_result =='CC':
-            return self.community_chest(self.players[self.current_player])
-        if renting_result =='C':
-            return self.Chance(self.players[self.current_player])
-        return renting_result
+
+    def take_fee(self,building_index):
+        print(self.mapa[building_index].get_color())
+        if self.mapa[building_index] not in self.players[self.current_player].get_items():
+            #plashta taksa
+            if self.bug_fix(building_index)!=-1:
+                self.mapa[building_index].take_fee(self.players[self.current_player],1)
+                return 'pay_player'#da go napisha
+            
+
+            building_index1 = self.move_player_by_rolled(0)[0]#bezpolezno za sega
+            renting_result = self.mapa[building_index].take_fee(self.players[self.current_player])
+            
+            if renting_result =='CC':
+                return self.community_chest(self.players[self.current_player])
+            if renting_result =='C':
+                return self.Chance(self.players[self.current_player])
+            return renting_result
+        else :
+            return 'own'
         
     
     def jail_decision(self,money,steps=0):

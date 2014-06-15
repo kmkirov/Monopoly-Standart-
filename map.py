@@ -16,6 +16,10 @@ class mapa:
     #    return self._deck[building_position]
 
     def buy_building(self,building_index,player,auction):
+        #print(player)
+        if self._deck[building_index] in player.get_items():
+            #else:
+            return False # zashtooooooooo ne raboti inacheee
         if building_index in FORBIDDEN:
             return False
 
@@ -58,11 +62,11 @@ class mapa:
     
      
     # nqma proverka za jal zashtoto se vika ot chest i chance
-    def move_player_by_roll(self, player, steps): #return old position of the plar
+    #def move_player_by_roll(self, player, steps): #return old position of the plar
         
         #self._deck[positions[0]].all_players().remove(player)  # ne go polzvam !
         #self._deck[positions[1]].all_players().append(player)  # ne go polzvam !
-        pass
+        #pass
 
     
     def move_player_to_position(self,player,position): #chance and chest
@@ -82,6 +86,9 @@ class mapa:
                 counter = counter + 1
             self.move_player_by_roll(player,counter)
             return counter #return the number of positions to move ahead...
+    
+    def take_fee(self,player,building_index):
+        pass
 
 
         
