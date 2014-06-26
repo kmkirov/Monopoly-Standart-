@@ -32,9 +32,9 @@ players_buy_icons[3]=pygame.image.load('players_icons/ship - own.gif')
 players_mortage_icons[3]=pygame.image.load('players_icons/ship - mortage.gif')
 players_move_icons[3]=pygame.image.load('players_icons/ship.gif')
 
-players_buy_icons[4]=pygame.image.load('players_icons/hat - own.gif')
-players_mortage_icons[4]=pygame.image.load('players_icons/hat - mortage.gif')
-players_move_icons[4]=pygame.image.load('players_icons/hat.gif')
+players_buy_icons[0]=pygame.image.load('players_icons/hat - own.gif')
+players_mortage_icons[0]=pygame.image.load('players_icons/hat - mortage.gif')
+players_move_icons[0]=pygame.image.load('players_icons/hat.gif')
 
 house_icons[0]=pygame.image.load('players_icons/zero.gif')
 house_icons[1]=pygame.image.load('players_icons/one.gif')
@@ -53,7 +53,7 @@ def players_render(window,game):#ne se znae kolko raboti
     #fpsClock = pygame.time.Clock()
     #window.blit(background,(0, 0))
     
-    #pygame.time.wait(2000)
+    pygame.time.wait(2000)
     for index in range(len(list_of_player)):
        #find_position_x_y(list_coords[i][1]) 
         print(index,'render players' )
@@ -169,39 +169,6 @@ def get_key():
 
 JAIL = 10
 
-def roll_dices(game,display): #testvan!!!!
-    
-    rolled = game.roll_dice()
-    background = pygame.image.load('pictures/bG.jpg')
-    display.blit(background,blue_bg)
-    font = pygame.font.Font(None,30)
-    if  len(rolled) > 2:
-        text = "rolled "+ str(rolled[0]) + ' is dice ' +str(rolled[1])
-        textImg = font.render(text, 1, (255,0,0))
-        display.blit( textImg, (200,150) )# za da e nai otgore
-        print(text)
-        pygame.display.update()
-        pygame.time.wait(2000)
-        return [rolled[2],rolled[0]]#old,new pos
-    elif rolled[1] == 'JAIL' :
-        text = rolled[1]
-        textImg = font.render(text, 1, (255,0,0))
-        display.blit( textImg, (200,150) )
-        pygame.display.update()
-        print(text)
-        
-        pygame.time.wait(2000)
-        return 'JAIL'
-    else:
-        text = rolled[1]
-        textImg = font.render(text, 1, (255,0,0))
-        display.blit( textImg, (200,150) )
-        pygame.display.update()
-        print(text)
-        pygame.time.wait(2000)
-
-    return [1]
-    
     #game processing ...
 
 def register_player(game,display): #testvan!!!!
@@ -261,7 +228,7 @@ def mourtager(game, window): #testvana da sloja animaciq za poziciq
         print('mourtage' + str(building_number) +'ok')
         buy_or_mortage_property(game.current_player_index(), building_number,MOURTAGE,window)
     #mourtage animation
-
+#
 def unmourtager(game, window):  #testvana da sloja animaciq za poziciq
    
     background = pygame.image.load('pictures/bG.jpg')
@@ -313,10 +280,10 @@ def sell_houser(game,player_name,window):   #testvana uj
 
 
 def Buyer(game, index,pp):
-
+    building_position = game.current_position()
     font = pygame.font.Font(None, 30)    
-    textImg = font.render( "   Buy building "+game[index][0], 1, (255,0,0))
-    textImg1 = font.render( "   building name is " + game[index][1], 1, (255,0,0))
+    textImg = font.render( "   Buy building "+game.at(building_position)[0], 1, (255,0,0))
+    textImg1 = font.render( "   building name is " + game.at(building_position)[1], 1, (255,0,0))
     catImg1 = pygame.image.load('pictures/bG.jpg')
     pp.blit(catImg1,blue_bg)    
     bg_color = (255, 255, 255)
@@ -353,20 +320,19 @@ def Buyer(game, index,pp):
             mousex, mousey = event.pos
             if Buy.pressed([mousex,mousey]):
                 print('buy')
-                game.buy_building(index,0) 
-                return 'buy'
-                
-                    
-            
+                a = game.buy_building(building_position,0) 
+                if a:
+                    return 'buy'
             if Auction.pressed([mousex,mousey]):
                 return 'auction'
     return 1
 
-def Jail(game, index,pp):
+def Jail(game,pp, rolled):
 
     font = pygame.font.Font(None, 30)    
-    textImg = font.render( "   Buy building "+game[index][0], 1, (255,0,0))
-    textImg1 = font.render( "   building name is " + game[index][1], 1, (255,0,0))
+    index = game.current_player_index()
+    textImg = font.render( "   jail decite pay or stay ", 1, (255,0,0))
+    #textImg1 = font.render( "   building name is " + game[index][1], 1, (255,0,0))
     catImg1 = pygame.image.load('pictures/bG.jpg')
     pp.blit(catImg1,blue_bg)    
     bg_color = (255, 255, 255)
@@ -385,7 +351,7 @@ def Jail(game, index,pp):
     Stay.create_button(pp,bg_color, x_position +200,y_position ,
                            text_lenght,x_text_border,y_text_border,'Stay',text_color)
     pp.blit( textImg, center)# za da e nai otgore
-    pp.blit( textImg1, (120,200) )# za da e nai otgore
+    #pp.blit( textImg1, (120,200) )# za da e nai otgore
     pygame.display.update()
     
     
@@ -401,18 +367,22 @@ def Jail(game, index,pp):
             mousex, mousey = event.pos
         elif event.type == MOUSEBUTTONUP:
             mousex, mousey = event.pos
-            if Buy.pressed([mousex,mousey]):
-                print('free')
-                game.buy_building(index,0) 
-                return 'stay'
-                
+            if Free.pressed([mousex,mousey]):
+                #globqva s 50 i mest i mesti na novo mqsto kato se ochakva za mqsotto da se proveri kakvo e
+                game.free_from_jail(rolled)
+                print('free 50') 
+                old_poss= game.current_position()
+                move_icon(old_poss, old_poss + rolled,index,MOVE,pp)               
+                return ['free', rolled]
+            elif Stay.pressed([mousex,mousey]):
+                #ostav asi v zatvora i ne moje da mu e 3ti put :)
+                print('stay 0')  
+                game.stay_in_jail()               
+                return ['stay']
                     
-            
-            if Auction.pressed([mousex,mousey]):
-                return 'auction'
-    return 1  
+          
 
-def auctioner(game, building_number,pp,icon):
+def auctioner(game, building_number,pp):
     
     
     font = pygame.font.Font(None, 30)
@@ -523,14 +493,15 @@ def end_turner():
 def saver():
     pygame.image.save(DISPLAYSURF,'pictures/resized.bmp')        
 
-def display_current_player(display,player_name,player_budget,x_y_player_name,x_y_budget):
-    font = pygame.font.Font(None, 30)
-    textImg = font.render( "current player name: " + str(player_name), 1, (255,0,0))
-    tImg = font.render( "budget: " + str(player_budget), 1, (255,0,0))
+def display_current_player(display,game,x_y_player_name,x_y_budget):
+    info = game.render_name_and_budget()
+    ffont = pygame.font.Font(None, 30)   
+    textImg = ffont.render(  str(info[0]), 1, (255,0,0))
+    tImg = ffont.render( "budget: " + str(info[1]), 1, (255,0,0))
                           # player name coord (20,558) and budget(400,558)
     display.blit( textImg, x_y_player_name)
     display.blit( tImg, x_y_budget )# za da e nai otgore
-    pygame.font.quit()
+    
 
 def find_position_x_y(position):
     picx = go_player_picturex
@@ -665,7 +636,100 @@ def build_or_sell_house( house_count,player_index, new_position,display):
 #build_or_sell_house(2,1, 3) raboti
 
 
-""" ideq za auction
+
+def roll_dices(game,display): #testvan!!!!
+    
+    action = game.roll_dice()
+    background = pygame.image.load('pictures/bG.jpg')
+    display.blit(background,blue_bg)
+    font = pygame.font.Font(None,30)
+    position = game.current_position()
+    player_id = game.current_player_index()
+    
+    if len(action) == 1 : #elif rolled[1] == 'JAIL' :
+        text = 'in jail'
+        textImg = font.render(text, 1, (255,0,0))
+        display.blit( textImg, (200,150) )
+        pygame.display.update()
+        pygame.time.wait(2000)
+        result = Jail(game,display,action[0])
+        if len(reuslt) == 2:
+            Buyer(game, position,display)
+            text='free from jail + pay 50'
+            textImg = font.render(text, 1, (255,0,0))
+            display.blit( textImg, (200,150) )
+            pygame.display.update()
+            pygame.time.wait(2000)
+            print(text)
+        text='stay in jail '
+        textImg = font.render(text, 1, (255,0,0))
+        display.blit( textImg, (200,150) )
+        pygame.display.update()
+        pygame.time.wait(2000)
+        return 'stay'
+    elif len(action) == 2 :
+                        
+        #move_icon(position,position + action[0],player_id,MOVE,display )
+        text='go in jail '
+        textImg = font.render(text, 1, (255,0,0))
+        display.blit( textImg, (200,150) )
+        pygame.display.update()
+        pygame.time.wait(2000)
+        return action
+
+    elif len(action)  == 3:
+        #move_icon(position,position + action[0],player_id,MOVE,display )
+        #rezult = Buyer(game, player_id, display)
+        rezult = 'buy'
+        if rezult == 'buy' :pass
+            #buy_or_mortage_property(player_id, position ,BUY,display)
+        else :pass
+            #auctioner(game, position,display)
+        return action
+    elif len(action) == 4:
+        game.end_turn()      
+        return [len(action)]
+    else:
+        text = 'ERROR !!! roll'
+        textImg = font.render(text, 1, (255,0,0))
+        display.blit( textImg, (200,150) )
+        pygame.display.update()
+        pygame.time.wait(2000)
+        return [len(action)]
+
+    return [1]
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
+if  len(rolled) > 2:
+        text = "rolled "+ str(rolled[0]) + ' is dice ' +str(rolled[1])
+        textImg = font.render(text, 1, (255,0,0))
+        display.blit( textImg, (200,150) )# za da e nai otgore
+        print(text)
+        pygame.display.update()
+        pygame.time.wait(2000)
+        return [len(rolled)]#old,new pos
+
+
+
+
+
+
+####################
+ ideq za auction
 def auctuion(building_index,window):
     auction_list = game.auction_list
     game.set_auction(building_index)

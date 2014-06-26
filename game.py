@@ -31,7 +31,8 @@ class Game():
                     return index
         return -1
 
-
+    def current_position(self):
+        return self.players[self.current_player].move_from_to(0)[0]
     def player_Free(self):
         return not self.players[self.current_player].jail()
     def current_player_index(self):
@@ -41,18 +42,96 @@ class Game():
     def render_name_and_budget(self):
         return [self.players[self.current_player].playername(),
                 self.players[self.current_player].player_budget() ]
+    
+    def at(self, index_building):
+        return self.mapa[index_building].building_names()
+    #def who(self):
+    #    return self.players[self.current_player].playername()
+
     def roll_dice(self):
+        #
+        END_TURN = 'END_TURN'
+        ASK_PLAYER = "ASK"
+        JAIL_PLACE= 10
+        IN_COURT = 30
+        a = random.randrange(1,7)
+        b = random.randrange(1,7)
+        #dali imame chift
+        currnet_possition = self.players[self.current_player].move_from_to(0)[0]
+        equal = a == b 
+        """check 1) in jail -> rolled a pair or not (2 options)
+                 2) 3dr pair in a roll got ot jail .. 
+                 3) pos + rolled = jail place ->go to jail 
+                 4) check if can move 
+                 5) move player by rolled """
+        if  currnet_possition == JAIL_PLACE : #1
+            if equal == True:
+                #izliza ot zatvora i pravi 1 hod s hwyrlenoto ot nego
+                position = self.move_player_by_rolled(a + b) 
+                print([a + a,position[0],END_TURN])                
+                return [a + a,position[0],END_TURN] 
+
+            else :
+                if self.players[self.current_player].jail() == MUST_PAY_JAIL:
+                    self.players[self.current_player].pay_money(JAIL_FEE)
+                    self.players[self.current_player].change_jail(FREE_FROM_JAIL)
+                    self.move_player(a + b)
+                    print([a+b,END_TURN])
+                    return [a+b,END_TURN]
+                    print([[a + b]])
+                return [a + b]
+
+        elif self._draw_counter == 2 and a == b: #2
+            steps = self.move_on_position(JAIL)
+            #self._draw_counter = 3
+            print([steps,END_TURN])
+            return [steps,END_TURN]#'END_TURN'
+
+        elif  currnet_possition + a + b == IN_COURT:
+            steps = self.move_on_position(JAIL)
+            print([steps,END_TURN])
+            return [steps,END_TURN]
+
+        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3:
+            print([0,END_TURN])
+            self.end_turn()
+            return [0,END_TURN,1,1]
+        
+        else:
+            if equal:
+                self._draw_dice = equal
+                self._draw_counter = self._draw_counter + 1
+            else :
+                self._draw_dice = False
+            position = self.move_player_by_rolled(a + b) 
+            print([a + b, a==b,position[1]])
+            return [a + b, a==b,position[1]]
+
+
+
+
+
+
+
+    #old version
+    def roll_dice1(self):
         a = random.randrange(1,7)
         b = random.randrange(1,7)
         #logging
                
-        if self._draw_counter == 2 and a==b:
+        if self._draw_counter == 2 and a==b:  # otiva v zatvora zashtoto mu e 3tiq chift
             steps = self.move_on_position(JAIL)
             self._draw_counter = 3
             return [steps,'JAIL']
-        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3:
-            self.end_turn()
+        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3: #==endturn
+            #self.end_turn()
             return [0,'END_TURN']
+        #skoro dobaveno
+        elif  self.move_on_position(0) == 10 : # v zatvora e 
+            if a == b:
+                return [a+b,'END_TURN']
+
+            return ['jail_decision']
         else:
             self._draw_dice = a == b
             self._draw_counter = self._draw_counter + 1
@@ -86,6 +165,7 @@ class Game():
 
     
     def move_on_position(self,position):
+        #return steps
         return self.mapa.move_player_to_position(self.players[self.current_player],position)
  
     def move_player_by_rolled(self, steps ):
@@ -97,25 +177,36 @@ class Game():
 
     def take_fee(self,building_index):
         print(self.mapa[building_index].get_color())
-        if self.mapa[building_index] not in self.players[self.current_player].get_items():
+        #if self.mapa[building_index] not in self.players[self.current_player].get_items():
             #plashta taksa
-            if self.bug_fix(building_index)!=-1:
-                self.mapa[building_index].take_fee(self.players[self.current_player],1)
-                return 'pay_player'#da go napisha
+            #if self.bug_fix(building_index)!=-1:
+            #    self.mapa[building_index].take_fee(self.players[self.current_player],1)
+                
+            #    return 'pay_player'#da go napisha
             
 
-            building_index1 = self.move_player_by_rolled(0)[0]#bezpolezno za sega
-            renting_result = self.mapa[building_index].take_fee(self.players[self.current_player])
-            
-            if renting_result =='CC':
-                return self.community_chest(self.players[self.current_player])
-            if renting_result =='C':
-                return self.Chance(self.players[self.current_player])
-            return renting_result
-        else :
-            return 'own'
+        building_index1 = self.move_player_by_rolled(0)[0]#bezpolezno za sega
+        renting_result = self.mapa[building_index].take_fee(self.players[self.current_player])
         
-    
+        if renting_result =='CC':
+            return self.community_chest(self.players[self.current_player])
+        if renting_result =='C':
+            return self.Chance(self.players[self.current_player])
+        return renting_result
+        #else :
+        #    return 'own'
+        
+    #za sega nqma da go polzvam! no e za sluchq koga igrach e v zatvora i na 
+    #3ti put trqbva da izleze 
+    #avgradena v roll
+    def stay_in_jail(self):
+        self.playes[self.current_player].change_jail(self.playes[self.current_player].jail() + 1)
+    def free_from_jail(self,staps):
+        self.playes[self.current_player].pay_money(money)
+        self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
+        self.move_player(steps)
+        return 
+
     def jail_decision(self,money,steps=0):
         if money == JAIL_FEE: #pay for freedom
             self.playes[self.current_player].pay_money(money)

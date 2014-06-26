@@ -121,18 +121,23 @@ class building:
             return 'own'
         """
         print(self.owner,  self.__color_street)
-        if self.__color_street not in ['CC','C','TAX','JAIL','FREE']:
-            print(1)
-            return self.__color_street
+        if self.owner == ' ': # za krasota da pitam zashto ne raboti
+            return 'buy'
+
+        elif self.owner == player: #totalno ne raboti
+            return 'own'
+        
        
 
-        elif not self.is_mourtaged and tax:  # take fee from player
+        elif not self.is_mourtaged and not self.owner == player:# tax:  # take fee from player
             player.pay_money(self.with_house_fee[self.house_count])
             self.owner.add_money(self.with_house_fee[self.house_count])
             # take money and return
             print(11)
             return 'fee'
-        
+        elif self.__color_street not in ['CC','C','TAX','JAIL','FREE']:
+            print(1)
+            return self.__color_street
         elif self.__color_street == 'TAX':
              player.pay_money(self.with_house_fee[self.house_count]) 
              print(111)

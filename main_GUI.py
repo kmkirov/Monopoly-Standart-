@@ -11,7 +11,9 @@ BUY = 0
 MOURTAGE =1
 HOUSE = 2
 MOVE = 3
-def f():
+
+def f(game):
+
     bg_color = (255, 255, 255)
     text_color = (255,   0,   0)
     #windowBgColor = WHITE
@@ -41,10 +43,12 @@ def f():
     rules = Button()
     rules.create_button(DISPLAYSURF,bg_color, x_position ,next(y_position),text_lenght,x_text_border,y_text_border,'rules',text_color)
     register= Button()
-    register.create_button(DISPLAYSURF,bg_color, x_position ,next(y_position),text_lenght,x_text_border,y_text_border,'register',text_color)
+    register.create_button(DISPLAYSURF,bg_color, x_position ,next(y_position),text_lenght,x_text_border,y_text_border,'rules',text_color)
     bancrupt= Button()
     bancrupt.create_button(DISPLAYSURF,bg_color, x_position ,next(y_position),text_lenght,x_text_border,y_text_border,'bancrupt',text_color)
     #pygame.image.save(pygame.display.get_surface(),'C:/Python33/pictures/resized.bmp')
+    #name= Button()
+    #name.create_button(DISPLAYSURF,bg_color, x_position ,next(y_position),text_lenght,x_text_border,y_text_border,name,text_color)
     pygame.display.update()
 #processes = Process(target=f, )
 """
@@ -66,9 +70,9 @@ players_buy_icons[3]=pygame.image.load('players_icons/ship - own.gif')
 players_mortage_icons[3]=pygame.image.load('players_icons/ship - mortage.gif')
 players_move_icons[3]=pygame.image.load('players_icons/ship.gif')
 
-players_buy_icons[4]=pygame.image.load('players_icons/hat - own.gif')
-players_mortage_icons[4]=pygame.image.load('players_icons/hat - mortage.gif')
-players_move_icons[4]=pygame.image.load('players_icons/hat.gif')
+players_buy_icons[0]=pygame.image.load('players_icons/hat - own.gif')
+players_mortage_icons[0]=pygame.image.load('players_icons/hat - mortage.gif')
+players_move_icons[0]=pygame.image.load('players_icons/hat.gif')
 
 from buttons import *
 
@@ -105,7 +109,7 @@ def main():
     #windowSurface = pygame.display.set_mode((500, 400),0,32)
     pygame.display.set_caption('Hello ddddddddd world!')
     background = pygame.image.load('pictures/resized.bmp')
-    moving_dog = pygame.image.load('pictures/dog.gif')
+    #moving_dog = pygame.image.load('pictures/dog.gif')
     #end of main pictures
     DISPLAYSURF.blit(background,(0, 0))
     #DISPLAYSURF.blit(catImg, (picx,picy))
@@ -158,6 +162,9 @@ def main():
     #move_icon(0,5,0,DISPLAYSURF)
     while True:
         for event in pygame.event.get():
+            
+           
+            display_current_player(DISPLAYSURF,game,(600,500), (600,530))
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
@@ -167,38 +174,28 @@ def main():
                 mousex, mousey = event.pos
 
                 if roll_button.pressed([mousex,mousey]):
-                    """print('rolled pressed')    
-                    if not game.player_Free() :
-                        a = jail()
-                        if a == 'free':
-                            game.jail_decision(50)
-                        else: 
-                            break
-                    
+                    action = roll_dices(game,DISPLAYSURF)
+                    position = int(game.current_position())
+                    player_id = int(game.current_player_index())
+                    print(player_id)
+                    if len(action) == 2:                        
+                        move_icon(position - action[0],position ,player_id ,MOVE,DISPLAYSURF )
+                    elif len(action) == 3:
+                        move_icon(position - action[0],position ,player_id,MOVE,DISPLAYSURF )
+                        buy_option= Buyer(game, player_id, DISPLAYSURF)
+                        if buy_option == 'buy' :
+                            buy_or_mortage_property(player_id, position ,BUY,DISPLAYSURF)
+                        elif buy_option == 'auction' : 
+                            auctioner(game, position,DISPLAYSURF)
+                        else:
+                            pass #just stay there
+                    else: 
+                        print("roll error")
 
-                    #svoboden
-                    roll = roll_dices(game,DISPLAYSURF) #hvyrlq zarove
-                    if len(roll)<2: 
-                        display_centre(DISPLAYSURF)
-                        break
-                    #move_icon(roll[0], roll[1],game.current_player_index(),,DISPLAYSURF)#mesti igracha
-                    fee_result = game.take_fee()
-                    display_centre(DISPLAYSURF)
-                    if fee_result == 'buy':
-                        result = Buyer(game,roll[1],DISPLAYSURF)
-                        display_centre(DISPLAYSURF)
-                        if result =='buy':
-                            #picx,picy = move_icon(roll[0], roll[1],game.current_player_index(),DISPLAYSURF)
-                            buy_or_mortage_property(game.current_player_index(), roll[1],BUY,DISPLAYSURF)
-                    else:
-                        print('ogromen problem!!!!!! acution e cuknat') 
-                        #auctioner()
-                        display_centre(DISPLAYSURF)
-                        
-                    print('render')"""
-                    buy_or_mortage_property(1, 5 ,BUY,DISPLAYSURF)
+                    print('izleze ot roll ')
+                    display_centre(DISPLAYSURF)                    
                     players_render(DISPLAYSURF,game)
-                    f()
+                    f(game)
                 
                 if end_turn.pressed([mousex,mousey]):
                     game.end_turn()
@@ -264,12 +261,87 @@ def main():
 main()
 
 
+"""
+                    roll logic !!!!
+                    action = game.roll_dice#(game, game.current_player_index(),DISPLAYSURF)
+                    position = game.current_position()
+                    player_id = game.current_player_index()
+                    if len(action) == 1:
+                        result = Jail(game,DISPLAYSURF,action[0])
+                        if len(reuslt) == 2:
+                            Buyer(game, position,DISPLAYSURF)
+                            print('free from jail + pay 50')
+                    elif len(action) == 2 :
+                        
+                        move_icon(position,position + action[0],player_id,MOVE,DISPLAYSURF )
+                    elif len(action)  == 3:
+                        rezult = Buyer(game, player_id, DISPLAYSURF)
+                        if rezult == 'buy' :
+                            buy_or_mortage_property(player_id, position ,BUY,DISPLAYSURF)
+                        else :
+                            auctioner(game, position,DISPLAYSURF)
+                    elif len(action) == 4:
+                        game.end_turn()  """
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""print('rolled pressed')    
+                    if not game.player_Free() :
+                        a = jail()
+                        if a == 'free':
+                            game.jail_decision(50)
+                        else: 
+                            break
+                    
+
+                    #svoboden
+                    roll = roll_dices(game,DISPLAYSURF) #hvyrlq zarove
+                    if len(roll)<2: 
+                        display_centre(DISPLAYSURF)
+                        break
+                    #move_icon(roll[0], roll[1],game.current_player_index(),,DISPLAYSURF)#mesti igracha
+                    fee_result = game.take_fee()
+                    display_centre(DISPLAYSURF)
+                    if fee_result == 'buy':
+                        result = Buyer(game,roll[1],DISPLAYSURF)
+                        display_centre(DISPLAYSURF)
+                        if result =='buy':
+                            #picx,picy = move_icon(roll[0], roll[1],game.current_player_index(),DISPLAYSURF)
+                            buy_or_mortage_property(game.current_player_index(), roll[1],BUY,DISPLAYSURF)
+                    else:
+                        print('ogromen problem!!!!!! acution e cuknat') 
+                        #auctioner()
+                        display_centre(DISPLAYSURF)
+                        
+                    print('render')"""
 
 
         #pionkax = 30

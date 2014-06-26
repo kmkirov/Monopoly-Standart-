@@ -62,11 +62,11 @@ class mapa:
     
      
     # nqma proverka za jal zashtoto se vika ot chest i chance
-    #def move_player_by_roll(self, player, steps): #return old position of the plar
+    def move_player_by_roll(self, player, steps): #return old position of the plar
         
         #self._deck[positions[0]].all_players().remove(player)  # ne go polzvam !
         #self._deck[positions[1]].all_players().append(player)  # ne go polzvam !
-        #pass
+        pass#nenujna
 
     
     def move_player_to_position(self,player,position): #chance and chest
