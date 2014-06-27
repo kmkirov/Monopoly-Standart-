@@ -21,29 +21,40 @@ class Player:
     def player_budget(self):
         return self.budget
 
+
     def get_picture(self):
         return [self.picture,self.position]
 
+
     def playername(self):
-        return self.player_name        
+        return self.player_name  
+
 
     def add_money(self, money):
         self.budget = self.budget + money
 
+
     def pay_money(self, money):
-        self.budget = self.budget - money    
+        self.budget = self.budget - money   
+
 
     def get_items(self):
         return self.list_of_items
 
+
     def jail(self):
         return self.in_jail
+
 
     def change_jail(self,status):
         self.in_jail = status
 
-    def move_from_to(self, steps):
 
+    def move_from_to(self, steps):
+        """
+        move player by steps and if he is on jail_court 30
+        move him to jail 10  and change free variable 
+        """
         old_position = self.position
         self.position = (self.position + steps)  % FIELD
         if self.position == JAIL_court:
@@ -52,14 +63,22 @@ class Player:
         return [old_position,self.position % FIELD]      
 
     
-    def has_line(self, color):        
+    def has_line(self, color): 
+        """
+        check if player has all buildings from color / build house
+        """       
         counter = 0
         for i in self.list_of_items:
             if re.search(color, i.get_color()):
                 counter = counter + 1
         return [counter  == DICT_OF_COLORS[color], counter]
 
+
     def house_and_hotels_counter(self):
+        """
+        count all hotels and houses in list of buildngs of the player
+        ->[house,hotel]
+        """
         house = 0
         hotel = 0
         for building in self.list_of_items:
@@ -69,7 +88,11 @@ class Player:
     #def __str__(self):
     #    return self.player_name
 
-    def add_items(self, items): #test only
+    def add_items(self, items):
+        """
+        add building in the list 
+        """
+        #test only
         if items == 'bancrupt':
             self.list_of_items = list()
         else :

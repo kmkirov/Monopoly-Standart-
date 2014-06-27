@@ -8,6 +8,7 @@ FORBIDDEN = [0,2,4,7,10,17,20,22,30,33,36,38]
 class mapa:
     def __init__(self):
         self._deck = list(LIST_OF_BUILDINGS)
+
     
     def __getitem__(self,i):
         return self._deck[i]   
@@ -17,6 +18,11 @@ class mapa:
 
     def buy_building(self,building_index,player,auction):
         #print(player)
+        """
+        1)  за предпазване от странно поведени се проверява дали сградата не се притежава от играча
+        2)  check if it is posible to buy a building (community, tax , cant be bought)
+        3) bug first building change ownership and if succeed building is add to the list of buildings
+        """
         if self._deck[building_index] in player.get_items():
             #else:
             return False # zashtooooooooo ne raboti inacheee
@@ -27,8 +33,15 @@ class mapa:
             player.add_items(self._deck[building_index])
             return True
         return False
+
     
     def trade_buildings(self,offerer,offerer_buildings_index,offerer_money,receiver, receiver_buildings_index, receiver_money):
+        """
+        Много е важно да приема лист от сгради и ако няма сгради да се пише 0 вътре
+        1) по подадения списък на сградите прави списък от обекти на тези сгради(индексите)
+        2) проверява дали подадените сгради наистина принадлежат на съответния играч
+        3) осъществява размяната на сградите и после на парите (ако имаше и карти и тях)
+        """
         offerer_buildings = []
         receiver_buildings = []
 
@@ -70,6 +83,10 @@ class mapa:
 
     
     def move_player_to_position(self,player,position): #chance and chest
+        """
+        The main idea is to give the number of steps between
+         current position and new position+ without for go 200$ (can be go to jail steps)
+        """
         positions = player.move_from_to(0)[0]
         counter = 0
         if positions == position: 

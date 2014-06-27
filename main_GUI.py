@@ -107,7 +107,7 @@ def main():
     fpsClock = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((760, 580), 0, 32)
     #windowSurface = pygame.display.set_mode((500, 400),0,32)
-    pygame.display.set_caption('Hello ddddddddd world!')
+    pygame.display.set_caption('Monopoly Standard Edition')
     background = pygame.image.load('pictures/resized.bmp')
     DISPLAYSURF.blit(background,(0, 0))    
     pygame.display.update()
@@ -163,7 +163,10 @@ def main():
             elif event.type == MOUSEBUTTONUP:
                 display_current_player(DISPLAYSURF,game,(600,500), (600,530))
                 mousex, mousey = event.pos
-
+                
+                if game.has_winner():
+                    winner(DISPLAYSURF,game)#ne znam kak da zavurshi
+                
                 if roll_button.pressed([mousex,mousey]):
                     roll_dices(game,DISPLAYSURF)
                     game.take_fee()          
@@ -184,11 +187,15 @@ def main():
                     print('mourtage pressed')
                     mourtager(game, DISPLAYSURF)
                     display_centre(DISPLAYSURF)
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                
                 if unmourtage.pressed([mousex,mousey]):
                     print('unmourtage pressed')
                     unmourtager(game, DISPLAYSURF)
                     display_centre(DISPLAYSURF)
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                 
                 if trade.pressed([mousex,mousey]):
                     print('trade pressed')
@@ -221,6 +228,7 @@ def main():
                     
                 if bancrupt.pressed([mousex,mousey]):#works but buggy
                     print('bancrupt pressed',register.stat)
+                    game.bancrupt()
                     #self.other(DISPLAYSURF,game)
                     #display_centre(DISPLAYSURF)
                     #register_player()

@@ -31,6 +31,14 @@ class Game():
                     return index
         return -1
 
+    def houses_at_index(self,building_index):
+        houses = self.mapa[building_index].house_and_hotels_list()
+        if houses[1] == 1:
+            return 5
+        return houses[0]
+
+    def has_winner(self):
+        return len(self.players) == 1
     def current_position(self):
         return self.players[self.current_player].move_from_to(0)[0]
     def player_Free(self):
@@ -49,7 +57,7 @@ class Game():
     #    return self.players[self.current_player].playername()
 
     def roll_dice(self):
-        #
+
         END_TURN = False
         ASK_PLAYER = "ASK"
         JAIL_PLACE= 10
@@ -181,11 +189,14 @@ class Game():
         #else :
         #    return 'own'
         
+
     #za sega nqma da go polzvam! no e za sluchq koga igrach e v zatvora i na 
     #3ti put trqbva da izleze 
     #avgradena v roll
     def stay_in_jail(self):
         self.players[self.current_player].change_jail(self.players[self.current_player].jail() + 1)
+    
+
     def free_from_jail(self,staps):
         money = 50
         self.players[self.current_player].pay_money(money)
@@ -193,7 +204,9 @@ class Game():
         self.move_player(steps)
         return 
 
+        #veche ne e nujno!
     def jail_decision(self,money,steps=0):
+        """ DON'T USE IT"""
         if money == JAIL_FEE: #pay for freedom
             self.playes[self.current_player].pay_money(money)
             self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
@@ -205,11 +218,12 @@ class Game():
         else:
             self.playes[self.current_player].change_jail(self.playes[self.current_player].jail() + 1)#+1 for being there
 
+    
     def bancrupt(self):
-        index = self.move_by_rolled(0)
-        self.mapa[index].bancrupt(self.playes[self.current_player])
+        index = self.current_position()
+        self.mapa[index].bancrupt(self.players[self.current_player])
         self.players.pop(self.current_player)
-        #self.endturn()
+        self.end_turn()
 
     def shuffler(self): #ne raboti !!!
         for i in range(random.randint(5,10)):
@@ -238,6 +252,7 @@ class Game():
     
     
     def __nearest_pos_from_list( self, player_pos ,listed_places): #checked in game_test_only
+        """ find nearest number to given player poss from a list """
         for i in listed_places:
             if i > player_pos :
                 return i
@@ -245,7 +260,19 @@ class Game():
 
 
 
-    def community_chest(self,player):  
+    def community_chest(self,player): 
+        """
+        we are working wit mesg which is the text of community_chest card
+        instructions are in card_chest
+
+        1)travel + geting moneu
+        2) card for jail ->not needed
+        3)fee for house_and_hotels
+        4) pay to everybody
+        5) .... easy 
+        В файла с променливи са подредени по групи тук също
+
+        """
         card_chest = self._COMMUNITY_CHEST[self._comunity_chest_index] #izbiram karta
 
         mesg = card_chest[0]#suobshtenieto koeto shte vurnem
@@ -290,6 +317,9 @@ class Game():
 
     
     def Chance(self, player):#ne e testvan
+        """
+        Подреждането е както във файла за шанс :) 
+        """
         card_chest = self._CHANCE[self._chance_index] #izbiram karta
 
         mesg = card_chest[0]#suobshtenieto koeto shte vurnem

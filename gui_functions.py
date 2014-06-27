@@ -57,7 +57,7 @@ def players_render(window,game):#ne se znae kolko raboti
     for index in range(len(list_of_player)):
        #find_position_x_y(list_coords[i][1]) 
         print(index,'render players' )
-        window.blit(house_icons[0],list_coords[index])#ne raboti
+        window.blit(players_move_icons[index],list_coords[index])#ne raboti
         
         pygame.display.update() 
         
@@ -202,8 +202,8 @@ def trader(game,player_name,window): #raboti
     #print(current_offer_buildings,current_offer_money)
     #print(other_offer_buildings,other_offer_money)
 
-    game.trade_buildings(player_name,current_offer_buildings,other_player,other_offer_buildings)
-    game.trade_money(player_name, other_player, current_offer_money, other_offer_money)
+    game.trade_buildings(player_name,current_offer_buildings,current_offer_money, other_player,other_offer_buildings,other_offer_money)
+    #game.trade_money(player_name, other_player, current_offer_money, other_offer_money)
     #pygame.quit()
 
 def mourtager(game, window): #testvana da sloja animaciq za poziciq
@@ -218,7 +218,7 @@ def mourtager(game, window): #testvana da sloja animaciq za poziciq
     building_number = ask(window,'Number of a building')#vyvejdaneto    
     if game.mourtage(int(building_number)):
         print('mourtage' + str(building_number) +'ok')
-        buy_or_mortage_property(game.current_player_index(), building_number,MOURTAGE,window)
+        buy_or_mortage_property(game.current_player_index(), int(building_number),MOURTAGE,window)
     #mourtage animation
 #
 def unmourtager(game, window):  #testvana da sloja animaciq za poziciq
@@ -236,7 +236,7 @@ def unmourtager(game, window):  #testvana da sloja animaciq za poziciq
     building_number = ask(window,'Number of a building')#vyvejdaneto
     if game.unmourtage(int(building_number)):
         print('unmourtage' + str(building_number) +'ok')
-        buy_or_mortage_property(game.current_player_index(), building_number,BUY,window)
+        buy_or_mortage_property(game.current_player_index(),int( building_number),BUY,window)
     #unmortage animation
 
 def build_houser(game,player_name,window):   #testvana da dobavq animaciq
@@ -252,7 +252,12 @@ def build_houser(game,player_name,window):   #testvana da dobavq animaciq
     
 
     building_number = ask(window,'Number of a building')#vyvejdaneto
-    game.build_house(player_name,int(building_number))
+    if game.build_house(player_name,int(building_number)):
+        print('build' + str(building_number) +'ok')
+        player_index = game.current_player_index()
+        house_count = game.houses_at_index(int(building_number))
+        new_position = int(building_number)
+        build_or_sell_house( house_count,player_index, new_position,window)
     
 def sell_houser(game,player_name,window):   #testvana uj
     
@@ -266,8 +271,12 @@ def sell_houser(game,player_name,window):   #testvana uj
     pygame.display.update()
 
     building_number = ask(window,'Number of a building')#vyvejdaneto
-    game.sell_house(player_name,int(building_number))
-    print(building_number)
+    if game.sell_house(player_name,int(building_number)):
+        print(building_number)
+        player_index = game.current_player_index()
+        house_count = game.houses_at_index(int(building_number))
+        new_position = int(building_number)
+        build_or_sell_house( house_count,player_index, new_position,window)
 
 def Buyer(game, index,pp):
     building_position = game.current_position()
@@ -484,8 +493,16 @@ def end_turner(pp):
     time.sleep(2)
      # sledvashtiq igrach e na hod
     
-    
-def saver():
+def winner(pp,game) :
+    font = pygame.font.Font(None, 30)    
+    textImg = font.render( " winner is "+str(game.render_name_and_budget()[0]) , 1, (255,0,0))
+    #textImg1 = font.render( "   building name is " + game.at(building_position)[1], 1, (255,0,0))
+    catImg1 = pygame.image.load('pictures/bG.jpg')
+    pp.blit(catImg1,blue_bg)    
+    pp.blit( textImg, center)
+    pygame.display.update()
+    time.sleep(2)  
+def saver(DISPLAYSURF):
     #save na kartinkata
     pygame.image.save(DISPLAYSURF,'pictures/resized.bmp')        
 
@@ -605,7 +622,7 @@ def roll_dices(game,display): #testvan!!!!
         
         
     if len(action) == 2 :                        
-        move_icon(position,position + action[0],player_id,MOVE,display )
+        move_icon(position-action[0],position ,player_id,MOVE,display )
         text='go in jail '
         textImg = font.render(text, 1, (255,0,0))
         display.blit( textImg, (200,150) )
@@ -616,8 +633,8 @@ def roll_dices(game,display): #testvan!!!!
         
 
     elif len(action)  == 3:
-        move_icon(position,position - action[0],player_id,MOVE,display )
-        text=str(action[0]) + 'was' + str(action[1]) 
+        move_icon(position- action[0],position ,player_id,MOVE,display )
+        text='rolled '+str(action[0]) + ' was ' + str(action[1]) 
         textImg = font.render(text, 1, (255,0,0))
         display.blit( textImg, (200,150) )
         pygame.display.update()
