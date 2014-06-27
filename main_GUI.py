@@ -51,7 +51,7 @@ def f(game):
     #name.create_button(DISPLAYSURF,bg_color, x_position ,next(y_position),text_lenght,x_text_border,y_text_border,name,text_color)
     pygame.display.update()
 #processes = Process(target=f, )
-"""
+
 """
 players_move_icons = {}
 players_buy_icons = {}
@@ -73,7 +73,7 @@ players_move_icons[3]=pygame.image.load('players_icons/ship.gif')
 players_buy_icons[0]=pygame.image.load('players_icons/hat - own.gif')
 players_mortage_icons[0]=pygame.image.load('players_icons/hat - mortage.gif')
 players_move_icons[0]=pygame.image.load('players_icons/hat.gif')
-
+"""
 from buttons import *
 
 FPS = 15 # frames per second setting
@@ -86,7 +86,6 @@ end_trip = 50
 step_trip = 46
 magic_trip = 20 #bez popravkata ne e krasivo :)
 
-from multiprocessing import Process, Value
 
 
 
@@ -94,7 +93,8 @@ from multiprocessing import Process, Value
 
 
 
-# monopoly picture with players
+
+
 def main():
     game = Game()
     game.register_player('goshko')
@@ -109,17 +109,7 @@ def main():
     #windowSurface = pygame.display.set_mode((500, 400),0,32)
     pygame.display.set_caption('Hello ddddddddd world!')
     background = pygame.image.load('pictures/resized.bmp')
-    #moving_dog = pygame.image.load('pictures/dog.gif')
-    #end of main pictures
-    DISPLAYSURF.blit(background,(0, 0))
-    #DISPLAYSURF.blit(catImg, (picx,picy))
-    
-       
-    #end of buttons
-    #move_icon(0, 10,players_buy_icons[1],DISPLAYSURF)
-    #move_icon(0, 10,players_buy_icons[2],DISPLAYSURF)
-    #buy_or_mortage_property(players_buy_icons[1], 3,DISPLAYSURF)
-    #build_or_sell_house(players_buy_icons[1],3 ,DISPLAYSURF)
+    DISPLAYSURF.blit(background,(0, 0))    
     pygame.display.update()
     bg_color = (255, 255, 255)
     text_color = (255,   0,   0)
@@ -164,42 +154,30 @@ def main():
         for event in pygame.event.get():
             
            
-            display_current_player(DISPLAYSURF,game,(600,500), (600,530))
+            
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
             elif event.type == MOUSEMOTION:
                 mousex, mousey = event.pos
             elif event.type == MOUSEBUTTONUP:
+                display_current_player(DISPLAYSURF,game,(600,500), (600,530))
                 mousex, mousey = event.pos
 
                 if roll_button.pressed([mousex,mousey]):
-                    action = roll_dices(game,DISPLAYSURF)
-                    position = int(game.current_position())
-                    player_id = int(game.current_player_index())
-                    print(player_id)
-                    if len(action) == 2:                        
-                        move_icon(position - action[0],position ,player_id ,MOVE,DISPLAYSURF )
-                    elif len(action) == 3:
-                        move_icon(position - action[0],position ,player_id,MOVE,DISPLAYSURF )
-                        buy_option= Buyer(game, player_id, DISPLAYSURF)
-                        if buy_option == 'buy' :
-                            buy_or_mortage_property(player_id, position ,BUY,DISPLAYSURF)
-                        elif buy_option == 'auction' : 
-                            auctioner(game, position,DISPLAYSURF)
-                        else:
-                            pass #just stay there
-                    else: 
-                        print("roll error")
-
+                    roll_dices(game,DISPLAYSURF)
+                    game.take_fee()          
                     print('izleze ot roll ')
                     display_centre(DISPLAYSURF)                    
                     players_render(DISPLAYSURF,game)
                     f(game)
                 
                 if end_turn.pressed([mousex,mousey]):
+                    end_turner(DISPLAYSURF)
+                    display_centre(DISPLAYSURF)                     
                     game.end_turn()
                     players_render(DISPLAYSURF,game)
+                    f(game)
                     print('end_turn pressed')
                 
                 if mourtage.pressed([mousex,mousey]):

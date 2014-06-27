@@ -50,7 +50,7 @@ class Game():
 
     def roll_dice(self):
         #
-        END_TURN = 'END_TURN'
+        END_TURN = False
         ASK_PLAYER = "ASK"
         JAIL_PLACE= 10
         IN_COURT = 30
@@ -64,39 +64,43 @@ class Game():
                  3) pos + rolled = jail place ->go to jail 
                  4) check if can move 
                  5) move player by rolled """
-        if  currnet_possition == JAIL_PLACE : #1
+        if self._draw_counter > 0 and self._draw_dice == False:
+            self.end_turn()
+        if  self._draw_counter == 2 and a == b: #2
+            self._draw_counter = self._draw_counter + 1
+            steps = self.move_on_position(JAIL)
+            #self._draw_counter = 3
+            print([steps,END_TURN])
+            return [steps,END_TURN]#'END_TURN'
+
+        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3:
+            print([0,END_TURN])
+            self._draw_counter = 3
+            self.end_turn()
+            return [0,END_TURN,1,1]
+                
+        elif not  self.player_Free() : #1
             if equal == True:
                 #izliza ot zatvora i pravi 1 hod s hwyrlenoto ot nego
                 position = self.move_player_by_rolled(a + b) 
-                print([a + a,position[0],END_TURN])                
+                print([a + a,position[0],END_TURN])  
+                self._draw_counter= self._draw_counter + 1              
                 return [a + a,position[0],END_TURN] 
-
             else :
                 if self.players[self.current_player].jail() == MUST_PAY_JAIL:
                     self.players[self.current_player].pay_money(JAIL_FEE)
                     self.players[self.current_player].change_jail(FREE_FROM_JAIL)
                     self.move_player(a + b)
                     print([a+b,END_TURN])
+                    self._draw_counter= self._draw_counter + 1
                     return [a+b,END_TURN]
-                    print([[a + b]])
+                    
                 return [a + b]
-
-        elif self._draw_counter == 2 and a == b: #2
-            steps = self.move_on_position(JAIL)
-            #self._draw_counter = 3
-            print([steps,END_TURN])
-            return [steps,END_TURN]#'END_TURN'
-
         elif  currnet_possition + a + b == IN_COURT:
             steps = self.move_on_position(JAIL)
             print([steps,END_TURN])
-            return [steps,END_TURN]
-
-        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3:
-            print([0,END_TURN])
-            self.end_turn()
-            return [0,END_TURN,1,1]
-        
+            self._draw_counter= 3
+            return [steps,END_TURN]        
         else:
             if equal:
                 self._draw_dice = equal
@@ -175,7 +179,8 @@ class Game():
         else:
             return JAIL
 
-    def take_fee(self,building_index):
+    def take_fee(self):
+        building_index = self.current_player_index()
         print(self.mapa[building_index].get_color())
         #if self.mapa[building_index] not in self.players[self.current_player].get_items():
             #plashta taksa
@@ -200,10 +205,11 @@ class Game():
     #3ti put trqbva da izleze 
     #avgradena v roll
     def stay_in_jail(self):
-        self.playes[self.current_player].change_jail(self.playes[self.current_player].jail() + 1)
+        self.players[self.current_player].change_jail(self.players[self.current_player].jail() + 1)
     def free_from_jail(self,staps):
-        self.playes[self.current_player].pay_money(money)
-        self.playes[self.current_player].change_jail(FREE_FROM_JAIL)
+        money = 50
+        self.players[self.current_player].pay_money(money)
+        self.players[self.current_player].change_jail(FREE_FROM_JAIL)
         self.move_player(steps)
         return 
 
