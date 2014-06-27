@@ -17,15 +17,15 @@ class Map_tests(unittest.TestCase):
         self.assertEqual(map1.buy_building(1,player,0),True)
         self.assertEqual(map1.buy_building(1,player2,0),False)
         self.assertEqual(map1.buy_building(3,player2,0),True)
-        map1.trade_buildings(player,1,1200,player2,0,0)
+        map1.trade_buildings(player,[1],1200,player2,[0],0)
         self.assertEqual(player.player_budget(),240)
         self.assertEqual(player2.player_budget(),2640)
         self.assertEqual(player.get_items(),[])
         self.assertEqual(len(player2.get_items()),2)
         #mnogo stranno neshto sum napisal...
         position = player.move_from_to(0)[1]
-        self.assertEqual(map1.move_player_by_roll(player,15), position)
-        self.assertEqual(map1.move_player_to_position(player,10),35)
+        self.assertEqual(map1.move_player_by_roll(player,10), None)
+        self.assertEqual(map1.move_player_to_position(player,9),39)
 
         # ne sum testval move
 

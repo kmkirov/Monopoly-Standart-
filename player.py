@@ -3,7 +3,7 @@ import re,random
 DICT_OF_COLORS = {'Purple':2, 'Light-Green':3, 'Violet':3, 'Orange':3,
                   'Red':3 , 'Yellow':3, 'Dark-Green':3, 'Dark-Blue':2, 
                   'STATION':0,'TAX':0}
-
+JAIL_court = 30
 JAIL = 10
 FIELD = 39
 class Player:   
@@ -46,8 +46,9 @@ class Player:
 
         old_position = self.position
         self.position = (self.position + steps)  % FIELD
-        if self.position == JAIL:
-            self.in_jail = 0
+        if self.position == JAIL_court:
+            self.in_jail = 1
+            self.position = JAIL
         return [old_position,self.position % FIELD]      
 
     

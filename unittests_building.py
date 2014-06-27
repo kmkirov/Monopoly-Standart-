@@ -9,18 +9,29 @@ from player import Player
 
 class Building_tests(unittest.TestCase):
     def testBuildings(self): 
+        #initializihn buildings and players
         test_building = building('Mediterranean Ave.',  'Purple', 60,
                          50, 2, 10,     30,     90,  160,   250)
         test_building2 = building('Baltic Ave.',         'Purple', 60,
                   50, 4, 20,     60,    180,  320,   450)
         test_player = Player('kirakis')
         gosho = Player('goshko')
+
+        self.assertEqual(test_building2.take_fee(test_player,0),'buy')
+
+        self.assertEqual(test_building2.building_names(),'Baltic Ave.')
         self.assertEqual(test_building.get_color(),'Purple')
-        test_building.mourtage(test_player)
+        
+        self.assertEqual(test_building.mourtage(test_player),False)
+        self.assertEqual(test_building.unmourtage(test_player),False)
+        self.assertEqual(test_building.all_players(),[])
+        self.assertEqual(test_building.house_and_hotels_list(),[0,0])        
+
         self.assertEqual(test_player.player_budget(),1500)
-        test_building.buy_building(test_player,0)
+        self.assertEqual(test_building.buy_building(test_player,0),True)
+        self.assertEqual(test_building.take_fee(test_player,0),'own')
         self.assertEqual(test_player.player_budget(),1440)
-        test_building.mourtage(test_player)
+        self.assertEqual(test_building.mourtage(test_player),True)
         self.assertEqual(test_player.player_budget(), 1464)
         test_building.unmourtage(test_player)
         self.assertEqual(test_player.player_budget(), 1434)

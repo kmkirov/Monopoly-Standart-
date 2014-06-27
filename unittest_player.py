@@ -22,7 +22,8 @@ class Player_tests(unittest.TestCase):
         player.add_items(building('Baltic Ave.',         'Purple', 60,
                   50, 4, 20,     60,    180,  320,   450))
         self.assertEqual(player.has_line('Purple')[0],True)
-        self.assertEqual(player.has_line('Purple')[0],True)
+        player.add_money(52)
+        self.assertEqual(player.player_budget(),1552)
 
         player.add_items(building('READING RAILROAD', 'STATION', 200, 25))
         self.assertEqual(player.has_line('STATION')[1],1)

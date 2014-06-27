@@ -63,7 +63,7 @@ class mapa:
      
     # nqma proverka za jal zashtoto se vika ot chest i chance
     def move_player_by_roll(self, player, steps): #return old position of the plar
-        
+        player.move_from_to(steps)
         #self._deck[positions[0]].all_players().remove(player)  # ne go polzvam !
         #self._deck[positions[1]].all_players().append(player)  # ne go polzvam !
         pass#nenujna
@@ -87,8 +87,8 @@ class mapa:
             self.move_player_by_roll(player,counter)
             return counter #return the number of positions to move ahead...
     
-    def take_fee(self,player,building_index):
-        pass
+    #def take_fee(self,player,building_index):
+    #    pass
 
 
         
@@ -110,7 +110,8 @@ class mapa:
 
 
 
-
+    """
+    owd version
     def set_player_on_pos(self,position,player_name):
         self._deck[position].add_player(player_name)
         
@@ -180,4 +181,4 @@ class mapa:
     
     def get_owner(self, position):
         return self._deck[position].get_owner()
-    
+    """

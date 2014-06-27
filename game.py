@@ -19,8 +19,8 @@ class Game():
         self._CHANCE = list(CHANCE)
         self._chance_index = 0
         self.current_player = 0
-        self._draw_dice = False
-        self._draw_counter = 0
+        self.chift = False
+        self.rolls_counter = 0
     #def __getitem__(self,index_building):
     #    return [self.mapa[index_building].building_names(),
     #    str(self.players[self.current_player])]
@@ -58,89 +58,72 @@ class Game():
         b = random.randrange(1,7)
         #dali imame chift
         currnet_possition = self.players[self.current_player].move_from_to(0)[0]
-        equal = a == b 
+        
         """check 1) in jail -> rolled a pair or not (2 options)
                  2) 3dr pair in a roll got ot jail .. 
                  3) pos + rolled = jail place ->go to jail 
                  4) check if can move 
                  5) move player by rolled """
-        if self._draw_counter > 0 and self._draw_dice == False:
+        if (self.rolls_counter > 0 and not self.chift ) or self.rolls_counter == 3 :
             self.end_turn()
-        if  self._draw_counter == 2 and a == b: #2
-            self._draw_counter = self._draw_counter + 1
-            steps = self.move_on_position(JAIL)
-            #self._draw_counter = 3
-            print([steps,END_TURN])
-            return [steps,END_TURN]#'END_TURN'
+            print('endturn case 1 '+  str(self.current_player_index()))
+            return
 
-        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3:
-            print([0,END_TURN])
-            self._draw_counter = 3
-            self.end_turn()
-            return [0,END_TURN,1,1]
+        if  self.rolls_counter == 2 and a == b: #2
+            self.rolls_counter = self.rolls_counter + 1
+            steps = self.move_on_position(JAIL)
+            #self.rolls_counter = 3
+            print('endturn case 2',[steps,END_TURN, self.current_player_index()])
+            return [steps,END_TURN]#'END_TURN'
                 
         elif not  self.player_Free() : #1
-            if equal == True:
+            if a==b:
                 #izliza ot zatvora i pravi 1 hod s hwyrlenoto ot nego
                 position = self.move_player_by_rolled(a + b) 
-                print([a + a,position[0],END_TURN])  
-                self._draw_counter= self._draw_counter + 1              
-                return [a + a,position[0],END_TURN] 
+                print('endturn case 4'[a + a,position[0],END_TURN], self.current_player_index())  
+                self.rolls_counter = 3              
+                return [a + a,position[0],END_TURN,] 
             else :
                 if self.players[self.current_player].jail() == MUST_PAY_JAIL:
                     self.players[self.current_player].pay_money(JAIL_FEE)
                     self.players[self.current_player].change_jail(FREE_FROM_JAIL)
                     self.move_player(a + b)
-                    print([a+b,END_TURN])
-                    self._draw_counter= self._draw_counter + 1
+                    print('endturn case 5',[a+b,END_TURN], self.current_player_index())
+                    self.rolls_counter= 3
                     return [a+b,END_TURN]
                     
-                return [a + b]
+                #return [a + b]ne znam zashto e tuk ...
         elif  currnet_possition + a + b == IN_COURT:
-            steps = self.move_on_position(JAIL)
-            print([steps,END_TURN])
-            self._draw_counter= 3
+            steps = self.move_on_position(a+b)
+            #auto jail added :D
+            print('endturn case 6'[steps,END_TURN], self.current_player_index())
+            self.rolls_counter= 3
             return [steps,END_TURN]        
         else:
-            if equal:
-                self._draw_dice = equal
-                self._draw_counter = self._draw_counter + 1
+            if a==b:
+                self.chift = a==b
+                self.rolls_counter = self.rolls_counter + 1
             else :
-                self._draw_dice = False
-            position = self.move_player_by_rolled(a + b) 
-            print([a + b, a==b,position[1]])
+                self.chift = False
+                self.rolls_counter =3
+            position = self.move_player_by_rolled(a + b) #old new - pos
+            if position[1]<position[0]:
+                self.players[self.current_player_index()].add_money(200)#minava go
+            print('endturn case 7:',self.rolls_counter, a==b, self.current_player_index())
             return [a + b, a==b,position[1]]
 
 
+    def end_turn(self):
+        print("player end_turn fn "+ str(self.current_player))
+        self.current_player = (self.current_player + 1)% len(self.players)
+        self.chift = False
+        self.rolls_counter = 0
+        print("player start_turn fn "+ str(self.current_player))
 
 
 
 
-
-    #old version
-    def roll_dice1(self):
-        a = random.randrange(1,7)
-        b = random.randrange(1,7)
-        #logging
-               
-        if self._draw_counter == 2 and a==b:  # otiva v zatvora zashtoto mu e 3tiq chift
-            steps = self.move_on_position(JAIL)
-            self._draw_counter = 3
-            return [steps,'JAIL']
-        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3: #==endturn
-            #self.end_turn()
-            return [0,'END_TURN']
-        #skoro dobaveno
-        elif  self.move_on_position(0) == 10 : # v zatvora e 
-            if a == b:
-                return [a+b,'END_TURN']
-
-            return ['jail_decision']
-        else:
-            self._draw_dice = a == b
-            self._draw_counter = self._draw_counter + 1
-            position = self.move_player_by_rolled(a + b) 
-            return [a + b, a==b,position[0]] #!!!!!  
+    
 
     def register_player(self,name):
         if self._valid_name(name):
@@ -159,10 +142,7 @@ class Game():
     def all_player(self): #za gui
         return [player.get_picture() for player in self.players]
 
-    def end_turn(self):
-        self.current_player = (self.current_player + 1)% len(self.players)
-        self._draw_dice = 0
-        self._draw_counter = 0
+
 
     def buy_building(self, building_index,auction):
         return self.mapa.buy_building(building_index, self.players[self.current_player],auction)
@@ -335,19 +315,24 @@ class Game():
             self.mapa.move_player_to_position(player,nearest)
             if self.mapa[nearest].have_owner() == '':
                 return 'buy'
-            self.mapa[nearest].get_rent(player)
+            self.mapa[nearest].take_fee(player)
             
 
         elif travel and nearest and second_len > 3: #vlakovete
             nearest = self.__nearest_pos_from_list(  player_pos ,card_chest[1])
-            self.self.mapa.move_player_to_position(player,nearest)            
+            self.mapa.move_player_to_position(player,nearest)            
             if player_pos >= card_chest[1][-1]:
                 player.add_money( GO_MONEY)#minava go
             if self.mapa[nearest].have_owner() == '':              
                 return 'buy'#ako ne e kupeno
-            self.mapa[nearest].get_rent(player) 
+            self.mapa[nearest].take_fee(player) 
 
         elif travel and get_money and second_len == 2 : #advance to + 200 if
+            if player_pos >= card_chest[1][-1]:
+                player.add_money( GO_MONEY)
+            self.mapa.move_player_to_position(player,command[1]) 
+            self.mapa[nearest].take_fee(player)
+        elif travel  and second_len == 2 : #advance to + 200 if
             if player_pos >= card_chest[1][-1]:
                 player.add_money( GO_MONEY)
             self.mapa.move_player_to_position(player,command[1]) 
@@ -355,10 +340,10 @@ class Game():
             
 
         elif spaces and second_len == 1: # 3 spaces back
-            self.mapa.move_player_to_position(player,command[1]) 
+            self.mapa.move_player_to_position(player,command[0]) 
             if self.mapa[player_pos - 3].have_owner() == '':              
                 return 'buy'
-            self.mapa[nearest].get_rent(player)
+            self.mapa[nearest].take_fee(player)
         
         elif second_len == 0 and free_jail: # jail card 
             pass
@@ -372,14 +357,41 @@ class Game():
             player.pay_money(command[0])
         
         elif get_money :
-            player.add_money(money)
+            player.add_money(command[0])
         
         else :
            print('errr chance '+ mesg)
         self._chance_index = self._chance_index + 1
         return mesg
     
-    """def move_by_rolled(self,steps):
+    """
+#old version
+    def roll_dice11(self):
+        a = random.randrange(1,7)
+        b = random.randrange(1,7)
+        #logging
+               
+        if self.rolls_counter == 2 and a==b:  # otiva v zatvora zashtoto mu e 3tiq chift
+            steps = self.move_on_position(JAIL)
+            self._draw_counter = 3
+            return [steps,'JAIL']
+        elif self._draw_counter > 0 and not self._draw_dice or self._draw_counter == 3: #==endturn
+            #self.end_turn()
+            return [0,'END_TURN']
+        #skoro dobaveno
+        elif  self.move_on_position(0) == 10 : # v zatvora e 
+            if a == b:
+                return [a+b,'END_TURN']
+
+            return ['jail_decision']
+        else:
+            self._draw_dice = a == b
+            self._draw_counter = self._draw_counter + 1
+            position = self.move_player_by_rolled(a + b) 
+            return [a + b, a==b,position[0]] #!!!!!  
+
+
+    def move_by_rolled(self,steps):
         if   self.players[self.current_player].jail != False:
             return JAIL   #can return jail
         return  self.mapa.move_player( steps ,self.players[self.current_player])"""

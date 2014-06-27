@@ -20,7 +20,7 @@ class building:
                  ):
 
       self.building_name = building_name
-      self.__color_street = color_street  # neighborhood po dobre vunshen
+      self.color_street = color_street  # neighborhood po dobre vunshen
       self.building_price = building_price
       self.perhouse_price = perhouse_price
       self.buildig_fee_globa = buildig_fee_globa
@@ -61,12 +61,12 @@ class building:
             return False
 
     def get_color(self):
-        return self.__color_street
+        return self.color_street
 
     def delete_player(self, player):
         if player in self.players_on_building:
             self.players_on_building.remove(player)
-
+    
     def all_players(self):
         return self.players_on_building
 
@@ -120,7 +120,7 @@ class building:
          elif self.owner == player: #totalno ne raboti
             return 'own'
         """
-        print(self.owner,  self.__color_street)
+        print(self.owner,  self.color_street)
         if self.owner == ' ': # za krasota da pitam zashto ne raboti
             return 'buy'
 
@@ -135,15 +135,15 @@ class building:
             # take money and return
             print(11)
             return 'fee'
-        elif self.__color_street not in ['CC','C','TAX','JAIL','FREE']:
+        elif self.color_street not in ['CC','C','TAX','JAIL','FREE']:
             print(1)
-            return self.__color_street
-        elif self.__color_street == 'TAX':
+            return self.color_street
+        elif self.color_street == 'TAX':
              player.pay_money(self.with_house_fee[self.house_count]) 
              print(111)
              return 'TAX'
 
-        elif self.__color_street in ['STATION','utility']:
+        elif self.color_street in ['STATION','utility']:
             if self.color_street == 'STATION':
                 money = [25,50,100,200]
                 player.pay_money(money[self.owner.has_line('STATION')[1]])

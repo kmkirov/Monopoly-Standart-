@@ -523,50 +523,7 @@ def find_position_x_y(position):
             picy = picy + step_trip
     return (picx,picy)
 
-def move_icon1(old_poss, new_pos,player_icon,display):   
-    picx,picy = find_position_x_y(old_poss)
-    mousex = 0
-    mousey= 0
-    fpsClock = pygame.time.Clock()
-    #DISPLAYSURF = pygame.display.set_mode((760, 555), 0, 32)
-    bg_image = pygame.image.load('pictures/resized.bmp')
-    #windowSurface = pygame.display.set_mode((500, 400),0,32)
-    for event in pygame.event.get(): # event handling loop
-            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                pygame.quit()
-                sys.exit()
-            elif event.type == MOUSEMOTION:
-                mousex, mousey = event.pos
-            elif event.type == MOUSEBUTTONUP:
-                mousex, mousey = event.pos
-                mouseClicked = True
-    for a in range(new_pos):
-        if picx > end_trip and picy >start_trip: 
-            picx = picx - step_trip
-            picy = picy 
-            
-            
-        elif picx < end_trip and picy > end_trip:
-              
-            picx = picx 
-            picy = picy - step_trip
-            
-        elif picx < start_trip - magic_trip and picy <end_trip:
-            picx = picx + step_trip
-            picy = picy
-        else :
-            picx = picx 
-            picy = picy + step_trip
-            
-        display.blit(bg_image,(0, 0))
-        display.blit(player_icon, (picx,picy))
-        
-        
-        fpsClock.tick(FPS)
-        pygame.display.update()        
-        fpsClock.tick(FPS)
-    return (picx,picy)
-    #pygame.image.save(pygame.display.get_surface(),'C:/Python33/pictures/resized.bmp')
+
 
 def buy_or_mortage_property(player_index, new_pos,action_type,display):#action_type in [BUY,MOURTAGE]
 
@@ -706,6 +663,51 @@ def roll_dices(game,display): #testvan!!!!
 
 
 """
+def move_icon1(old_poss, new_pos,player_icon,display):   
+    picx,picy = find_position_x_y(old_poss)
+    mousex = 0
+    mousey= 0
+    fpsClock = pygame.time.Clock()
+    #DISPLAYSURF = pygame.display.set_mode((760, 555), 0, 32)
+    bg_image = pygame.image.load('pictures/resized.bmp')
+    #windowSurface = pygame.display.set_mode((500, 400),0,32)
+    for event in pygame.event.get(): # event handling loop
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                pygame.quit()
+                sys.exit()
+            elif event.type == MOUSEMOTION:
+                mousex, mousey = event.pos
+            elif event.type == MOUSEBUTTONUP:
+                mousex, mousey = event.pos
+                mouseClicked = True
+    for a in range(new_pos):
+        if picx > end_trip and picy >start_trip: 
+            picx = picx - step_trip
+            picy = picy 
+            
+            
+        elif picx < end_trip and picy > end_trip:
+              
+            picx = picx 
+            picy = picy - step_trip
+            
+        elif picx < start_trip - magic_trip and picy <end_trip:
+            picx = picx + step_trip
+            picy = picy
+        else :
+            picx = picx 
+            picy = picy + step_trip
+            
+        display.blit(bg_image,(0, 0))
+        display.blit(player_icon, (picx,picy))
+        
+        
+        fpsClock.tick(FPS)
+        pygame.display.update()        
+        fpsClock.tick(FPS)
+    return (picx,picy)
+    #pygame.image.save(pygame.display.get_surface(),'C:/Python33/pictures/resized.bmp')
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if  len(rolled) > 2:
         text = "rolled "+ str(rolled[0]) + ' is dice ' +str(rolled[1])
         textImg = font.render(text, 1, (255,0,0))

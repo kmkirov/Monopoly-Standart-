@@ -16,8 +16,17 @@ class Game_tests(unittest.TestCase):
         self.assertEqual(game.register_player('goshko'),False)
         self.assertEqual(game.register_player('pesh'),False)
         self.assertEqual(len(game.all_player()), 2)
+        self.assertEqual(game.current_player, 0)
+        self.assertEqual(game.current_position(),0)
+        self.assertEqual(game.player_Free(),True)
         game.end_turn()
+
         self.assertEqual(game.current_player, 1)
+        self.assertEqual(game.current_player_index(),1)
+        self.assertEqual(game.icon(),1)
+        self.assertEqual(game.render_name_and_budget(),['peshko', 1500] )
+        self.assertEqual(game.at(3),'Baltic Ave.')
+
         self.assertEqual(game.buy_building(1,False),True)
         self.assertEqual(len(game.players[1].get_items()),1)
         self.assertEqual(len(game.players[0].get_items()),0)
@@ -68,8 +77,10 @@ class Game_tests(unittest.TestCase):
         self.assertEqual(game.players[1].player_budget(),2641)
 
         self.assertEqual(game.move_player_by_rolled(11)[1],11)
-
-
+        
+        for i in range(12): #psevdo test za sintaksis
+            game.community_chest(game.players[1])
+            game.Chance(game.players[1])
 
 if __name__ == '__main__':
     unittest.main()

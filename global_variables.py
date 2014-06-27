@@ -1,4 +1,5 @@
 COMMUNITY_CHEST = [['Advance to Go (collect $200)', [200, 0]],
+
                    ['Go to jail – go directly to jail – Do not pass Go, do not collect $200', [0,10]],
                    ['You are assessed for street repairs – $40 per house, $115 per hotel', [40,115]],
                    
@@ -41,11 +42,12 @@ lucky_regex = {'Get_money':r'collect',
 
 BANK='BANK'
 CHANCE = [ ['Advance to Go (collect $200)', [200,0]],
-           ['Advance to Illinois Ave.', [200,24]],
-           ['Take a walk on the Boardwalk – advance token to Boardwalk', [0,39]],
-           ['Go directly to Jail – do not pass Go, do not collect $200', [0,10]],
-           ['Advance to St. Charles Place – if you pass Go, collect $200', [200,11]],
-           ['Take a trip to Reading Railroad – if you pass Go collect $200', [200,  5]],
+           ['Advance to Illinois Ave.', [200,24] ],
+
+           ['Take a walk on the Boardwalk  Advance token to Boardwalk', [0,39]],
+           ['Go directly to Jail  do not pass Go, do not collect $200', [0,10]],
+           ['Advance to St. Charles Place  if you pass Go, collect $200', [200,11]],
+           ['Take a trip to Reading Railroad  if you pass Go collect $200', [200,  5]],
            
            ['Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned,\
               throw dice and pay owner a total ten times the amount thrown.', [12,28,10]],
@@ -59,16 +61,16 @@ CHANCE = [ ['Advance to Go (collect $200)', [200,0]],
            ['Go back 3 spaces', [-3]],
           
    
-           ['Get out of Jail free – this card may be kept until needed, or traded/sold', []],
+           ['Get out of Jail free  this card may be kept until needed, or traded/sold', []],
            
            ['Make general repairs on all your property – for each house pay $25 – for each hotel $100', [25,100]],
 
            ['Pay poor tax of $15', [15]],
           
            ['Bank pays you dividend of $50 (collect)', [50]],
-           ['You have been elected chairman of the board – pay each player $50', [50]],
+           ['You have been elected chairman of the board  pay each player $50', [50]],
            ['Your building loan matures collect $150', [150] ],
-           ['You have won a crossword competition - collect $100 ', [100]]
+           ['You have won a crossword competition  collect $100 ', [100]]
            ]
 GO_MONEY =200
 #if da e duma, ne e napraveno
