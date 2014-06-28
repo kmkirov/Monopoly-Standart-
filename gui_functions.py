@@ -94,7 +94,7 @@ MOVE = 3
 center = (120,150)
 blue_bg = (120, 120)
 JAIL = 10
-
+#new pos is steps :)
 def move_icon(old_poss, new_pos,player_index,type,DISPLAYSURF): 
     if type == BUY:
         image = players_buy_icons[player_index]
@@ -622,7 +622,7 @@ def roll_dices(game,display): #testvan!!!!
         
         
     if len(action) == 2 :                        
-        move_icon(position-action[0],position ,player_id,MOVE,display )
+        move_icon(position-action[0],action[0] ,player_id,MOVE,display )
         text='go in jail '
         textImg = font.render(text, 1, (255,0,0))
         display.blit( textImg, (200,150) )
@@ -633,7 +633,7 @@ def roll_dices(game,display): #testvan!!!!
         
 
     elif len(action)  == 3:
-        move_icon(position- action[0],position ,player_id,MOVE,display )
+        move_icon(position- action[0],action[0] ,player_id,MOVE,display )
         text='rolled '+str(action[0]) + ' was ' + str(action[1]) 
         textImg = font.render(text, 1, (255,0,0))
         display.blit( textImg, (200,150) )

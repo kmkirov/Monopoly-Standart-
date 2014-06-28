@@ -201,27 +201,37 @@ def main():
                     print('trade pressed')
                     trader(game,'kirakis',DISPLAYSURF)
                     display_centre(DISPLAYSURF)
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                 
                 if sell.pressed([mousex,mousey]):
                     print('sell pressed')
                     sell_houser(game,"player_name",DISPLAYSURF)
                     display_centre(DISPLAYSURF)
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                 
                 if build.pressed([mousex,mousey]):
                     print('build pressed')
                     build_houser(game,"player_name",DISPLAYSURF)
                     display_centre(DISPLAYSURF)
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                     
                 if rules.pressed([mousex,mousey]):
                     print('rules pressed')
                     
                     display_centre(DISPLAYSURF)
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                     
                 if register.pressed([mousex,mousey]):#works but buggy
                     print('register pressed',register.stat)
                     register_player(game,DISPLAYSURF)
                     pygame.display.update()    
-                    display_centre(DISPLAYSURF)                                            
+                    display_centre(DISPLAYSURF)  
+                    players_render(DISPLAYSURF,game)
+                    f(game)                                          
                     print(game.all_player())
 
                     #da dobavq centralna kartinka 
@@ -229,6 +239,8 @@ def main():
                 if bancrupt.pressed([mousex,mousey]):#works but buggy
                     print('bancrupt pressed',register.stat)
                     game.bancrupt()
+                    players_render(DISPLAYSURF,game)
+                    f(game)
                     #self.other(DISPLAYSURF,game)
                     #display_centre(DISPLAYSURF)
                     #register_player()
