@@ -25,7 +25,7 @@ class Map_tests(unittest.TestCase):
         #mnogo stranno neshto sum napisal...
         position = player.move_from_to(0)[1]
         self.assertEqual(map1.move_player_by_roll(player,10), None)
-        self.assertEqual(map1.move_player_to_position(player,9),39)
+        self.assertEqual(map1.move_player_to_position(player,9),38)
 
         # ne sum testval move
 

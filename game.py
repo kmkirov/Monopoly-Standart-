@@ -168,8 +168,8 @@ class Game():
             return JAIL
 
     def take_fee(self):
-        building_index = self.current_player_index()
-        print(self.mapa[building_index].get_color())
+        building_index = self.current_position()
+        print(self.mapa[building_index].get_color(),self.current_position())
         #if self.mapa[building_index] not in self.players[self.current_player].get_items():
             #plashta taksa
             #if self.bug_fix(building_index)!=-1:
@@ -178,9 +178,9 @@ class Game():
             #    return 'pay_player'#da go napisha
             
 
-        building_index1 = self.move_player_by_rolled(0)[0]#bezpolezno za sega
+        #building_index1 = self.move_player_by_rolled(0)[0]#bezpolezno za sega
         renting_result = self.mapa[building_index].take_fee(self.players[self.current_player])
-        
+        print(renting_result,'----- teke fee')
         if renting_result =='CC':
             return self.community_chest(self.players[self.current_player])
         if renting_result =='C':
@@ -320,6 +320,7 @@ class Game():
         """
         Подреждането е както във файла за шанс :) 
         """
+        print()
         card_chest = self._CHANCE[self._chance_index] #izbiram karta
 
         mesg = card_chest[0]#suobshtenieto koeto shte vurnem
@@ -340,58 +341,66 @@ class Game():
         if travel and nearest and second_len == 3: #roll utility 
             if player_pos > card_chest[1][-1]:
                 player.add_money( 200)#minava go
-                
+            print(1,' tuk sum ')    
             nearest = self.__nearest_pos_from_list(  player_pos ,card_chest[1])
             self.mapa.move_player_to_position(player,nearest)
-            if self.mapa[nearest].have_owner() == '':
+            if self.mapa[nearest].have_owner() == ' ':
                 return 'buy'
-            self.mapa[nearest].take_fee(player)
+            self.take_fee()
             
 
         elif travel and nearest and second_len > 3: #vlakovete
+            print(2,' tuk sum ')
             nearest = self.__nearest_pos_from_list(  player_pos ,card_chest[1])
             self.mapa.move_player_to_position(player,nearest)            
             if player_pos >= card_chest[1][-1]:
                 player.add_money( GO_MONEY)#minava go
-            if self.mapa[nearest].have_owner() == '':              
+            if self.mapa[nearest].have_owner() == ' ':              
                 return 'buy'#ako ne e kupeno
             self.mapa[nearest].take_fee(player) 
 
         elif travel and get_money and second_len == 2 : #advance to + 200 if
-            if player_pos >= card_chest[1][-1]:
+            print(3,' tuk sum ')
+            if player_pos >= card_chest[1][-1] :
                 player.add_money( GO_MONEY)
+            print(command[1])
             self.mapa.move_player_to_position(player,command[1]) 
-            self.mapa[nearest].take_fee(player)
+            #self.take_fee()
+        
         elif travel  and second_len == 2 : #advance to + 200 if
             if player_pos >= card_chest[1][-1]:
                 player.add_money( GO_MONEY)
+            print(4,' tuk sum ')
             self.mapa.move_player_to_position(player,command[1]) 
             self.mapa[nearest].take_fee(player)
             
 
         elif spaces and second_len == 1: # 3 spaces back
+            print(5,' tuk sum ')
             self.mapa.move_player_to_position(player,command[0]) 
             if self.mapa[player_pos - 3].have_owner() == '':              
                 return 'buy'
             self.mapa[nearest].take_fee(player)
         
         elif second_len == 0 and free_jail: # jail card 
-            pass
+            print(333,' tuk sum ')
+
             #self.self.players[self.current_player].add_jail_card()
             
         elif second_len == 2 and pay_hotel: #pay for repairs
             money = player.house_and_hotels_counter()
             player.pay_money(command[0] * money[0] + command[1] * money[1])
-
+            print(6,' tuk sum ')
         elif just_pay :
             player.pay_money(command[0])
-        
+            print(7,' tuk sum ')
         elif get_money :
             player.add_money(command[0])
-        
+            print(8,' tuk sum ')
         else :
            print('errr chance '+ mesg)
         self._chance_index = self._chance_index + 1
+        print(mesg)
         return mesg
     
     """

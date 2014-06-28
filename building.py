@@ -115,13 +115,14 @@ class building:
         """
         get the money + buildins from current player 
         """
+        if self.owner == ' ':
+            return
         if player == self.owner:
             return 
         for item in player.get_items():
             self.owner.get_items().append(item)
             item.change_owner(self.owner)  
-        if self.owner == ' ':
-            return
+        
         self.owner.add_money(player.player_budget())#take money
         player.add_items('bancrupt')
         #print(self.owner.get_items())
@@ -146,9 +147,9 @@ class building:
           7) community or chance return it to game ....
         """
         print(self.owner,  self.color_street)
-        if self.owner == ' ': # za krasota da pitam zashto ne raboti
+        if self.owner == ' ' and self.color_street not in ['STATION','utility', 'CC','C','TAX']: # za krasota da pitam zashto ne raboti
             return 'buy'
-
+        # ako tova raboti shte rabotqt i ostanalite
         elif self.owner == player: #totalno ne raboti
             return 'own'
         

@@ -78,9 +78,9 @@ class Game_tests(unittest.TestCase):
 
         self.assertEqual(game.move_player_by_rolled(11)[1],11)
         
-        for i in range(12): #psevdo test za sintaksis
-            game.community_chest(game.players[1])
-            game.Chance(game.players[1])
+        #for i in range(12): #psevdo test za sintaksis
+        #    game.community_chest(game.players[1])
+        #    game.Chance(game.players[1])
 
 if __name__ == '__main__':
     unittest.main()

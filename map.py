@@ -99,10 +99,12 @@ class mapa:
             return position - positions # kolko stypki da mine gui
         elif positions > position:            
             while positions != position:
-                positions = (positions + 1)%len(self._deck)
+                positions = (positions + 1)%len(self._deck)                
                 counter = counter + 1
-            self.move_player_by_roll(player,counter)
-            return counter #return the number of positions to move ahead...
+
+            self.move_player_by_roll(player,counter-1)
+            #print(counter, 'mnogo podvejdasht counter')
+            return counter-1 #return the number of positions to move ahead...
     
     #def take_fee(self,player,building_index):
     #    pass
